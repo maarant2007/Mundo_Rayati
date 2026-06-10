@@ -1,6 +1,6 @@
 from flask import Flask, render_template_string, url_for
 import os
-app = Flask(__name__, static_folder='C:/MundoDeRayati/static')
+app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 pagina = """

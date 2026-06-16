@@ -13,7 +13,7 @@
 
 <nav>
   <a href="#" class="nav-logo">
-    <img src="/static/imagenes/logo.jpeg" alt="Mundo de Rayati" style="height:54px; width:auto;">
+    <img src="{{ url_for('static', filename='img/logo.png.jpeg') }}" alt="Mundo de Rayati" style="height:54px; width:auto;">
     <span style="font-family:'Baloo 2',cursive;font-weight:800;font-size:20px;color:var(--azul);margin-left:10px;">Mundo de Rayati</span>
   </a>
   <ul class="nav-links">
@@ -454,7 +454,7 @@
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <img src="/static/imagenes/logo.jpeg" alt="Mundo de Rayati" style="height:64px; width:auto; margin-bottom:10px; filter: brightness(0) invert(1);">
+      <img src="{ url_for('static', filename='img/fondo.png.jpeg') }" alt="Mundo de Rayati" style="height:64px; width:auto; margin-bottom:10px; filter: brightness(0) invert(1);">
       <p>Formando con amor, educando para la vida. I.E.P. comprometida con la excelencia.</p>
     </div>
     <div class="footer-col">

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I.E.P. Mundo de Rayati</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="rainbow-bar"></div>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="/static/imagenes/logo.jpeg" alt="Mundo de Rayati" style="height:54px; width:auto;">
+    <span style="font-family:'Baloo 2',cursive;font-weight:800;font-size:20px;color:var(--azul);margin-left:10px;">Mundo de Rayati</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#niveles">Niveles</a></li>
+    <li><a href="#porque">¿Por qué?</a></li>
+    <li><a href="#tienda">Tienda</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="#matricula" class="btn-matricula">Matrícula 2026</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="burbuja b1"></div>
+  <div class="burbuja b2"></div>
+  <div class="burbuja b3"></div>
+  <div class="burbuja b4"></div>
+  <div class="burbuja b5"></div>
+  <div class="hero-content">
+    <span class="hero-badge">✨ Institución Educativa Particular</span>
+    <h1>
+      <span class="txt-azul">Mundo</span>
+      <span class="txt-amarillo"> de  </span>
+      <span class="txt-rojo">Ray</span><span class="txt-morado">ati</span>
+    </h1>
+    <div class="hero-btns">
+      <a href="#niveles" class="btn-primary">Conoce nuestros niveles</a>
+      <a href="#matricula" class="btn-secondary">Matrícula 2026</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item"><strong>15+</strong><span>Años de experiencia</span></div>
+  <div class="stat-item"><strong>500+</strong><span>Alumnos felices</span></div>
+  <div class="stat-item"><strong>30+</strong><span>Docentes calificados</span></div>
+  <div class="stat-item"><strong>100%</strong><span>Compromiso familiar</span></div>
+</div>
+
+<section id="niveles">
+  <p class="section-label">Nuestros programas</p>
+  <h2 class="section-title">Niveles educativos</h2>
+  <p class="section-sub">Acompañamos a tu hijo en cada etapa de su desarrollo con programas diseñados para brillar.</p>
+  <div class="niveles-grid">
+    <div class="nivel-card inicial">
+      <span class="nivel-icon">🌱</span>
+      <h3>Nivel Inicial</h3>
+      <p>3, 4 y 5 años. Aprendizaje lúdico, desarrollo emocional y primeras habilidades sociales en un ambiente cálido y seguro.</p>
+      <span class="nivel-tag">3 – 5 años</span>
+    </div>
+    <div class="nivel-card primaria">
+      <span class="nivel-icon">📚</span>
+      <h3>Nivel Primaria</h3>
+      <p>1° a 6° grado. Formación académica sólida, pensamiento crítico y valores que los preparan para el futuro.</p>
+      <span class="nivel-tag">6 – 12 años</span>
+    </div>
+    <div class="nivel-card talleres">
+      <span class="nivel-icon">🎨</span>
+      <h3>Talleres</h3>
+      <p>Arte, música, deporte y robótica. Potenciamos el talento único de cada niño más allá del aula.</p>
+      <span class="nivel-tag">Extracurricular</span>
+    </div>
+  </div>
+</section>
+
+<section id="porque">
+  <p class="section-label">Nuestras fortalezas</p>
+  <h2 class="section-title">¿Por qué elegirnos?</h2>
+  <p class="section-sub">Más que una escuela: una comunidad comprometida con el bienestar y el aprendizaje de tus hijos.</p>
+  <div class="razones-grid">
+    <div class="razon-card">
+      <div class="razon-icon">👩‍🏫</div>
+      <h3>Docentes vocacionales</h3>
+      <p>Maestros certificados y apasionados por la educación infantil, en constante capacitación.</p>
+    </div>
+    <div class="razon-card">
+      <div class="razon-icon">🏫</div>
+      <h3>Infraestructura moderna</h3>
+      <p>Ambientes amplios, seguros y estimulantes diseñados pensando en los niños.</p>
+    </div>
+    <div class="razon-card">
+      <div class="razon-icon">💡</div>
+      <h3>Metodología activa</h3>
+      <p>Aprendizaje basado en proyectos, juego y experiencias significativas.</p>
+    </div>
+    <div class="razon-card">
+      <div class="razon-icon">🤝</div>
+      <h3>Comunidad y familia</h3>
+      <p>Padres involucrados como aliados del proceso educativo de sus hijos.</p>
+    </div>
+    <div class="razon-card">
+      <div class="razon-icon">🎯</div>
+      <h3>Atención personalizada</h3>
+      <p>Grupos reducidos para garantizar seguimiento individual a cada estudiante.</p>
+    </div>
+    <div class="razon-card">
+      <div class="razon-icon">🌈</div>
+      <h3>Valores y convivencia</h3>
+      <p>Formamos ciudadanos íntegros con sólidos principios éticos y respeto mutuo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="valores">
+  <p class="section-label">Lo que nos define</p>
+  <h2 class="section-title">Nuestros valores</h2>
+  <p class="section-sub">Principios que guían cada acción dentro y fuera del aula.</p>
+  <div class="valores-grid">
+    <span class="valor-pill">🧡 Amor</span>
+    <span class="valor-pill">🌟 Excelencia</span>
+    <span class="valor-pill">🤝 Respeto</span>
+    <span class="valor-pill">💪 Responsabilidad</span>
+    <span class="valor-pill">🌱 Crecimiento</span>
+    <span class="valor-pill">🎨 Creatividad</span>
+    <span class="valor-pill">🌍 Inclusión</span>
+    <span class="valor-pill">😊 Alegría</span>
+  </div>
+</section>
+
+<section id="tienda">
+  <p class="section-label">Tienda Escolar</p>
+  <h2 class="section-title">📦 Libros, Uniformes y Útiles</h2>
+  <p class="section-sub">Encuentra todo lo que tu hijo necesita para el año escolar, con precios accesibles y calidad garantizada.</p>
+
+  <div class="tienda-tabs">
+    <button class="tab-btn active" onclick="filtrar(this,'todos')">🛒 Todo</button>
+    <button class="tab-btn" onclick="filtrar(this,'libros')">📚 Libros</button>
+    <button class="tab-btn" onclick="filtrar(this,'uniforme')">👕 Uniformes</button>
+    <button class="tab-btn" onclick="filtrar(this,'agendas')">📓 Agenda</button>
+  </div>
+
+  <div class="productos-grid">
+    <div class="producto-card visible" data-cat="libros">
+      <div class="prod-emoji">📖</div>
+      <div class="prod-body">
+        <span class="prod-cat libros">Libros</span>
+        <h4>Comunicación – Nivel Inicial</h4>
+        <p>Libro de trabajo para 3, 4 y 5 años. Incluye fichas de lectoescritura y comprensión lectora.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 35.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="libros">
+      <div class="prod-emoji">🔢</div>
+      <div class="prod-body">
+        <span class="prod-cat libros">Libros</span>
+        <h4>Matemática – Nivel Inicial</h4>
+        <p>Cuaderno de ejercicios numéricos, lógica y geometría básica para inicial.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 32.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="libros">
+      <div class="prod-emoji">📘</div>
+      <div class="prod-body">
+        <span class="prod-cat libros">Libros</span>
+        <h4>Comunicación – Primaria (1° – 3°)</h4>
+        <p>Libro oficial de Comunicación para los primeros grados de primaria. Comprensión y producción de textos.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 42.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="libros">
+      <div class="prod-emoji">📗</div>
+      <div class="prod-body">
+        <span class="prod-cat libros">Libros</span>
+        <h4>Matemática – Primaria (1° – 3°)</h4>
+        <p>Libro de Matemática con ejercicios progresivos, problemas y actividades lúdicas.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 42.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="libros">
+      <div class="prod-emoji">📙</div>
+      <div class="prod-body">
+        <span class="prod-cat libros">Libros</span>
+        <h4>Comunicación – Primaria (4° – 6°)</h4>
+        <p>Libro de Comunicación para grados superiores. Literatura, gramática y ortografía.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 45.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="libros">
+      <div class="prod-emoji">📕</div>
+      <div class="prod-body">
+        <span class="prod-cat libros">Libros</span>
+        <h4>Matemática – Primaria (4° – 6°)</h4>
+        <p>Matemática avanzada con fracciones, álgebra básica y resolución de problemas.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 45.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="uniforme">
+      <div class="prod-emoji">👕</div>
+      <div class="prod-body">
+        <span class="prod-cat uniforme">Uniforme</span>
+        <h4>Polo Colegio</h4>
+        <p>Polo oficial con logo bordado del colegio. Tallas: 2, 4, 6, 8, 10, 12, 14. Colores: blanco y azul.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 28.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="uniforme">
+      <div class="prod-emoji">🧥</div>
+      <div class="prod-body">
+        <span class="prod-cat uniforme">Uniforme</span>
+        <h4>Buzo Completo (casaca + pantalón)</h4>
+        <p>Buzo deportivo oficial azul marino con detalles en rojo. Tallas: 2 al 14. Tela antifluido y cómoda.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 85.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="uniforme">
+      <div class="prod-emoji">🩳</div>
+      <div class="prod-body">
+        <span class="prod-cat uniforme">Uniforme</span>
+        <h4>Short Educación Física</h4>
+        <p>Short deportivo para clases de educación física. Tela ligera y transpirable. Azul marino con logo.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 25.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="producto-card visible" data-cat="agendas">
+      <div class="prod-emoji">📓</div>
+      <div class="prod-body">
+        <span class="prod-cat agendas">Agenda</span>
+        <h4>Agenda Escolar Mundo de Rayati</h4>
+        <p>Agenda oficial única para todo el colegio (Inicial y Primaria). Incluye horario semanal, registro de tareas, calendario escolar anual y espacio para comunicados a los padres.</p>
+        <div class="prod-precio-row">
+          <span class="prod-precio">S/ 20.00</span>
+          <a href="#contacto" class="btn-pedir">Pedir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="tienda-nota">
+    💬 Para realizar tu pedido, escríbenos por <strong>WhatsApp o al formulario de contacto</strong>.<br>
+    Entrega en institución o coordina el recojo. Precios válidos para la campaña escolar 2025.
+  </p>
+</section>
+
+<section id="matricula">
+  <p class="section-label">Inscripciones 2026</p>
+  <h2 class="section-title">🎒 Proceso de Matrícula</h2>
+  <p class="section-sub">Asegura el cupo de tu hijo en pocos pasos. Las vacantes son limitadas.</p>
+
+  <div class="matricula-wrap">
+    <div class="pasos-grid">
+      <div class="paso-card">
+        <span class="paso-num">1</span>
+        <span class="paso-icon">📋</span>
+        <h4>Solicita información</h4>
+        <p>Completa el formulario y nos comunicamos contigo en menos de 24 h.</p>
+      </div>
+      <div class="paso-card">
+        <span class="paso-num">2</span>
+        <span class="paso-icon">🏫</span>
+        <h4>Visita el colegio</h4>
+        <p>Conoce nuestras instalaciones y conversa con nuestra directora.</p>
+      </div>
+      <div class="paso-card">
+        <span class="paso-num">3</span>
+        <span class="paso-icon">📄</span>
+        <h4>Entrega documentos</h4>
+        <p>Presenta los requisitos indicados y realiza el pago de matrícula.</p>
+      </div>
+      <div class="paso-card">
+        <span class="paso-num">4</span>
+        <span class="paso-icon">🎉</span>
+        <h4>¡Bienvenido!</h4>
+        <p>Tu hijo ya es parte de la familia Mundo de Rayati.</p>
+      </div>
+    </div>
+
+    <div class="matricula-form">
+      <p class="form-titulo">📝 Solicitud de matrícula</p>
+      <p class="form-subtitulo">Completa el formulario y te contactamos para coordinar tu visita.</p>
+
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Nombre del apoderado</label>
+          <input type="text" placeholder="Nombre completo">
+        </div>
+        <div class="form-row">
+          <label>Teléfono / WhatsApp</label>
+          <input type="tel" placeholder="+51 945373930">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Nombre del alumno</label>
+          <input type="text" placeholder="Nombre del niño/a">
+        </div>
+        <div class="form-row">
+          <label>Edad del alumno</label>
+          <input type="number" placeholder="Ej: 5" min="3" max="13">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Nivel al que postula</label>
+        <select>
+          <option>Inicial – 2 años</option>
+          <option>Inicial – 3 años</option>
+          <option>Inicial – 4 años</option>
+          <option>Inicial – 5 años</option>
+          <option>Primaria – 1° grado</option>
+          <option>Primaria – 2° grado</option>
+          <option>Primaria – 3° grado</option>
+          <option>Primaria – 4° grado</option>
+          <option>Primaria – 5° grado</option>
+          <option>Primaria – 6° grado</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>Comentarios adicionales</label>
+        <textarea placeholder="¿Tienes alguna consulta sobre el proceso de matrícula?"></textarea>
+      </div>
+
+      <button class="btn-matricula-form">Enviar solicitud de matrícula 🎒</button>
+
+      <div class="matricula-requisitos">
+        <h4>📋 Documentos requeridos</h4>
+        <ul>
+          <li>Partida de nacimiento (copia)</li>
+          <li>DNI del alumno (si aplica)</li>
+          <li>DNI del apoderado (copia)</li>
+          <li>Libreta de notas del año anterior</li>
+          <li>2 fotografías tamaño carné</li>
+          <li>Ficha de salud actualizada</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto">
+  <p class="section-label">Comunícate con nosotros</p>
+  <h2 class="section-title">📬 Contáctanos</h2>
+  <p class="section-sub">¿Tienes dudas sobre la tienda, talleres u otra consulta general? Escríbenos directamente.</p>
+
+  <div class="contacto-grid">
+    <div class="contacto-info">
+      <div class="info-card">
+        <span class="info-icon">📍</span>
+        <div>
+          <h4>Dirección</h4>
+          <p>Av. Los Niños 123, Urb. Las Flores<br>Lima, Perú</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="info-icon">🕐</span>
+        <div>
+          <h4>Horario de atención</h4>
+          <p>Lunes a Viernes: 7:30 am – 5:00 pm<br>Sábados: 8:00 am – 12:00 pm</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="info-icon">📞</span>
+        <div>
+          <h4>Teléfono</h4>
+          <p>(01) 234-5678<br>
+          <a href="tel:+51945373930">+51 945373930</a></p>
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="info-icon">✉️</span>
+        <div>
+          <h4>Correo electrónico</h4>
+          <a href="mailto:info@mundoderayati.edu.pe">info@mundoderayati.edu.pe</a>
+        </div>
+      </div>
+      <a href="https://wa.me/51945373930" class="btn-whatsapp" target="_blank">
+        💬 Escribir por WhatsApp
+      </a>
+    </div>
+
+    <div class="contacto-form">
+      <p class="form-titulo">Envíanos un mensaje</p>
+      <p class="form-subtitulo">Te respondemos en menos de 24 horas hábiles.</p>
+
+      <div class="form-row">
+        <label>Nombre completo</label>
+        <input type="text" placeholder="Tu nombre">
+      </div>
+      <div class="form-row">
+        <label>Teléfono / WhatsApp</label>
+        <input type="tel" placeholder="+51 945373930">
+      </div>
+      <div class="form-row">
+        <label>Motivo de consulta</label>
+        <select>
+          <option>Consulta sobre la tienda escolar</option>
+          <option>Información sobre talleres</option>
+          <option>Consulta sobre pagos y pensiones</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Mensaje</label>
+        <textarea placeholder="Escribe tu consulta aquí…"></textarea>
+      </div>
+      <button class="btn-form-contacto">Enviar mensaje ✉️</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/static/imagenes/logo.jpeg" alt="Mundo de Rayati" style="height:64px; width:auto; margin-bottom:10px; filter: brightness(0) invert(1);">
+      <p>Formando con amor, educando para la vida. I.E.P. comprometida con la excelencia.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Institución</h4>
+      <ul>
+        <li><a href="#niveles">Niveles educativos</a></li>
+        <li><a href="#porque">¿Por qué elegirnos?</a></li>
+        <li><a href="#valores">Nuestros valores</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Tienda</h4>
+      <ul>
+        <li><a href="#tienda">Libros</a></li>
+        <li><a href="#tienda">Uniformes</a></li>
+        <li><a href="#tienda">Agenda</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Institución</h4>
+      <ul>
+        <li><a href="#matricula">Matrícula 2026</a></li>
+        <li><a href="#contacto">Contacto general</a></li>
+        <li><a href="https://wa.me/51945373930">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 I.E.P. Mundo de Rayati · Todos los derechos reservados
+  </div>
+</footer>
+
+<div class="rainbow-bar"></div>
+
+<div class="rainbow-bar"></div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>>
+
+</body>
+</html>

@@ -65,6 +65,23 @@ nav {
 }
 .nav-links .btn-matricula:hover { background: var(--naranja); }
 
+/* BOTÓN ADMIN EN NAVBAR */
+.nav-links .btn-admin {
+  background: var(--texto);
+  color: white !important;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 800;
+  border: 2px solid transparent;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.nav-links .btn-admin:hover {
+  background: #185FA5;
+  border-color: var(--azul-c);
+  transform: translateY(-1px);
+}
+
 /* HERO */
 .hero {
   position: relative;
@@ -248,7 +265,7 @@ section { padding: 80px 20px; }
   position: relative;
   overflow: hidden;
   transition: transform .25s, box-shadow .25s;
-  box-shadow: 0 6px 24 rgba(0,0,0,.12);
+  box-shadow: 0 6px 24px rgba(0,0,0,.12);
 }
 .nivel-card:hover { transform:translateY(-6px); box-shadow:0 14px 36px rgba(0,0,0,.18); }
 .nivel-card.inicial  { background: linear-gradient(135deg, #f47920, #f5b800); }
@@ -722,6 +739,22 @@ footer {
 .footer-col ul li { margin-bottom:8px; }
 .footer-col ul li a { color:rgba(255,255,255,.65); text-decoration:none; font-size:13px; font-weight:600; transition:color .2s; }
 .footer-col ul li a:hover { color:var(--azul-c); }
+
+/* ENLACE ADMIN EN FOOTER */
+.footer-col ul li a.footer-admin-link {
+  color: var(--azul-c);
+  font-weight: 800;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color .2s, opacity .2s;
+}
+.footer-col ul li a.footer-admin-link:hover {
+  color: white;
+  opacity: 1;
+}
+
 .footer-bottom {
   text-align:center;
   font-size:12px;

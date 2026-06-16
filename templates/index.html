@@ -13,7 +13,7 @@
 
 <nav>
   <a href="#" class="nav-logo">
-    <img src="{ me{ url_for('static', filename='img/logo.png.jpeg') }}" alt="Mundo de Rayati" style="height:54px; width:auto;">
+    <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="Mundo de Rayati" style="height:54px; width:auto;">
     <span style="font-family:'Baloo 2',cursive;font-weight:800;font-size:20px;color:var(--azul);margin-left:10px;">Mundo de Rayati</span>
   </a>
   <ul class="nav-links">
@@ -22,6 +22,7 @@
     <li><a href="#tienda">Tienda</a></li>
     <li><a href="#contacto">Contacto</a></li>
     <li><a href="#matricula" class="btn-matricula">Matrícula 2026</a></li>
+    <li><a href="{{ url_for('static', filename='templates/dashboard.html') }}" class="btn-admin" title="Acceso administrativo">🔐 Admin</a></li>
   </ul>
 </nav>
 
@@ -454,7 +455,7 @@
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <img src="{ url_for('static', filename='img/fondo.png.jpeg') }" alt="Mundo de Rayati" style="height:64px; width:auto; margin-bottom:10px; filter: brightness(0) invert(1);">
+      <img src="{{ url_for('static', filename='img/fondo.jpeg') }}" alt="Mundo de Rayati" style="height:64px; width:auto; margin-bottom:10px; filter: brightness(0) invert(1);">
       <p>Formando con amor, educando para la vida. I.E.P. comprometida con la excelencia.</p>
     </div>
     <div class="footer-col">
@@ -481,6 +482,12 @@
         <li><a href="https://wa.me/51945373930">WhatsApp</a></li>
       </ul>
     </div>
+    <div class="footer-col">
+      <h4>Administración</h4>
+      <ul>
+        <li><a href="{{ url_for('dashboard') }}">🔐 Panel Admin</a></li>
+      </ul>
+    </div>
   </div>
   <div class="footer-bottom">
     © 2025 I.E.P. Mundo de Rayati · Todos los derechos reservados
@@ -489,11 +496,6 @@
 
 <div class="rainbow-bar"></div>
 
-<div class="rainbow-bar"></div>
-
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>>
-
 </body>
 </html>

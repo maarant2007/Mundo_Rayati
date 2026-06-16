@@ -1,3 +1,4 @@
+Script · JS
 function filtrar(btn, cat) {
   // Quita la clase 'active' de todos los botones de las pestañas
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));

@@ -9,7 +9,7 @@
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: #f4f6fb;
+  background: #fdeef3;
   color: #1a1a2e;
   min-height: 100vh;
 }
@@ -28,7 +28,7 @@ body {
 .sidebar {
   width: 220px;
   background: #ffffff;
-  border-right: 1px solid #e8eaf0;
+  border-right: 1px solid #f6d9e3;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -42,7 +42,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 1.25rem 1rem;
-  border-bottom: 1px solid #e8eaf0;
+  border-bottom: 1px solid #f6d9e3;
 }
 
 .logo-icon {
@@ -81,12 +81,12 @@ nav {
 }
 
 .nav-item:hover {
-  background: #f0f4ff;
+  background: #fdeef3;
   color: #185FA5;
 }
 
 .nav-item.active {
-  background: #e8f0fb;
+  background: #fbe1ea;
   color: #185FA5;
   border-left: 3px solid #185FA5;
 }
@@ -97,7 +97,7 @@ nav {
 
 .sidebar-footer {
   padding: 1rem;
-  border-top: 1px solid #e8eaf0;
+  border-top: 1px solid #f6d9e3;
 }
 
 .btn-volver {
@@ -166,7 +166,7 @@ nav {
 
 .metric {
   background: #ffffff;
-  border: 1px solid #e8eaf0;
+  border: 1px solid #f6d9e3;
   border-radius: 12px;
   padding: 1.25rem;
 }
@@ -198,7 +198,7 @@ nav {
    ============================ */
 .card {
   background: #ffffff;
-  border: 1px solid #e8eaf0;
+  border: 1px solid #f6d9e3;
   border-radius: 14px;
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.25rem;
@@ -251,7 +251,7 @@ nav {
 .bar-track {
   flex: 1;
   height: 22px;
-  background: #f0f4ff;
+  background: #fdeef3;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -287,12 +287,12 @@ th {
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  border-bottom: 1px solid #e8eaf0;
+  border-bottom: 1px solid #f6d9e3;
 }
 
 td {
   padding: 10px 12px;
-  border-bottom: 1px solid #f0f2f7;
+  border-bottom: 1px solid #fbe9f0;
   color: #1a1a2e;
   font-weight: 600;
 }
@@ -302,7 +302,7 @@ tr:last-child td {
 }
 
 tr:hover td {
-  background: #f8faff;
+  background: #fdf3f7;
 }
 
 /* ============================
@@ -343,7 +343,7 @@ tr:hover td {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  border: 1px solid #d0d5e0;
+  border: 1px solid #f0c4d4;
   background: #ffffff;
   color: #1a1a2e;
   font-family: 'Nunito', sans-serif;
@@ -351,8 +351,8 @@ tr:hover td {
 }
 
 .btn:hover {
-  background: #f4f6fb;
-  border-color: #b0b8cc;
+  background: #fdeef3;
+  border-color: #e8a8c2;
 }
 
 .btn-primary {
@@ -396,7 +396,7 @@ tr:hover td {
 }
 
 .btn-close:hover {
-  background: #f0f2f7;
+  background: #fdeef3;
   color: #333;
 }
 
@@ -408,8 +408,8 @@ tr:hover td {
   align-items: center;
   gap: 8px;
   margin-bottom: 1rem;
-  background: #f8faff;
-  border: 1px solid #e0e4ee;
+  background: #fdf3f7;
+  border: 1px solid #f6d9e3;
   border-radius: 8px;
   padding: 8px 12px;
 }
@@ -448,7 +448,7 @@ tr:hover td {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(10, 10, 30, 0.45);
+  background: rgba(60, 20, 40, 0.35);
   z-index: 999;
   align-items: center;
   justify-content: center;
@@ -504,8 +504,8 @@ tr:hover td {
   width: 100%;
   padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid #d8dce8;
-  background: #f8faff;
+  border: 1px solid #f0d3de;
+  background: #fdf6f9;
   color: #1a1a2e;
   font-size: 14px;
   font-family: 'Nunito', sans-serif;
@@ -532,7 +532,7 @@ tr:hover td {
   justify-content: flex-end;
   margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid #e8eaf0;
+  border-top: 1px solid #f6d9e3;
 }
 
 /* ============================

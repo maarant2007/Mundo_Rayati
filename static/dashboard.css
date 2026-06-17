@@ -1,3 +1,6 @@
+/* ============================
+   RESET Y BASE
+   ============================ */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -10,11 +13,18 @@ body {
   color: #1a1a2e;
   min-height: 100vh;
 }
+
+/* ============================
+   LAYOUT PRINCIPAL
+   ============================ */
 .app {
   display: flex;
   min-height: 100vh;
 }
 
+/* ============================
+   SIDEBAR
+   ============================ */
 .sidebar {
   width: 220px;
   background: #ffffff;
@@ -71,12 +81,12 @@ nav {
 }
 
 .nav-item:hover {
-  background: #e3f3fb;
+  background: #fdeef3;
   color: #185FA5;
 }
 
 .nav-item.active {
-  background: #d6edf8;
+  background: #fbe1ea;
   color: #185FA5;
   border-left: 3px solid #185FA5;
 }
@@ -104,19 +114,11 @@ nav {
 .btn-volver:hover {
   color: #185FA5;
 }
-
-/* ============================
-   CONTENIDO PRINCIPAL
-   ============================ */
 .main {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
 }
-
-/* ============================
-   PÁGINAS (show/hide)
-   ============================ */
 .page {
   display: none;
 }
@@ -124,10 +126,6 @@ nav {
 .page.active {
   display: block;
 }
-
-/* ============================
-   ENCABEZADO DE PÁGINA
-   ============================ */
 .page-header {
   margin-bottom: 1.5rem;
 }
@@ -143,10 +141,7 @@ nav {
   color: #888;
   margin-top: 2px;
 }
-
-/* ============================
-   MÉTRICAS / KPI CARDS
-   ============================ */
+= */
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -182,10 +177,6 @@ nav {
   color: #aaa;
   margin-top: 4px;
 }
-
-/* ============================
-   CARDS
-   ============================ */
 .card {
   background: #ffffff;
   border: 1px solid #f6d9e3;
@@ -206,10 +197,6 @@ nav {
   font-weight: 800;
   color: #1a1a2e;
 }
-
-/* ============================
-   GRÁFICOS DE BARRAS
-   ============================ */
 .charts-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -259,10 +246,6 @@ nav {
   font-weight: 700;
   text-align: right;
 }
-
-/* ============================
-   TABLAS
-   ============================ */
 table {
   width: 100%;
   border-collapse: collapse;

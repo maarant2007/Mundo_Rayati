@@ -1,6 +1,3 @@
-/* ============================
-   RESET Y BASE
-   ============================ */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -13,18 +10,10 @@ body {
   color: #1a1a2e;
   min-height: 100vh;
 }
-
-/* ============================
-   LAYOUT PRINCIPAL
-   ============================ */
 .app {
   display: flex;
   min-height: 100vh;
 }
-
-/* ============================
-   SIDEBAR
-   ============================ */
 .sidebar {
   width: 220px;
   background: #ffffff;
@@ -141,7 +130,6 @@ nav {
   color: #888;
   margin-top: 2px;
 }
-= */
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -277,10 +265,6 @@ tr:last-child td {
 tr:hover td {
   background: #fdf3f7;
 }
-
-/* ============================
-   BADGES / ETIQUETAS
-   ============================ */
 .badge {
   display: inline-block;
   padding: 3px 10px;

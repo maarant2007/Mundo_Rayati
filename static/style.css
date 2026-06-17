@@ -9,6 +9,14 @@
   --blanco:  #ffffff;
   --gris-f:  #f4f8ff;
   --texto:   #2d3a4a;
+
+  /* Paleta pastel (derivada del logo + rosa pastel) */
+  --rosa-pastel:     #FBD3E9;
+  --celeste-pastel:  #AEE3F7;
+  --amarillo-pastel: #FFEDA8;
+  --verde-pastel:    #C3F2D9;
+  --lavanda-pastel:  #E4CCFA;
+  --durazno-pastel:  #FFD9B8;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -91,13 +99,13 @@ nav {
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  background: linear-gradient(160deg, #dff4ff 0%, #fff7c9 50%, #ffe6f1 100%);
+  background: linear-gradient(160deg, var(--celeste-pastel) 0%, var(--amarillo-pastel) 35%, var(--rosa-pastel) 70%, var(--lavanda-pastel) 100%);
   padding: 60px 20px 80px;
 }
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url("/static/imagenes/fondo.jpeg");
+  background-image: url("/static/img/fondo.jpeg");
   background-size: cover;
   background-position: center;
   opacity: 0.18;
@@ -106,14 +114,15 @@ nav {
 .burbuja {
   position: absolute;
   border-radius: 50%;
-  opacity: .18;
+  opacity: .35;
   animation: flotar 6s ease-in-out infinite;
 }
-.b1 { width:220px; height:220px; background:var(--azul-c);   top:-60px;   left:-60px;  animation-delay:0s; }
-.b2 { width:160px; height:160px; background:var(--amarillo); bottom:-40px; right:-40px; animation-delay:1.5s; }
-.b3 { width:100px; height:100px; background:var(--morado);   top:30%;     left:5%;     animation-delay:3s; }
-.b4 { width:80px;  height:80px;  background:var(--verde);    top:20%;     right:8%;    animation-delay:2s; }
-.b5 { width:120px; height:120px; background:var(--rojo);     bottom:10%;  left:15%;    animation-delay:4s; }
+.b1 { width:220px; height:220px; background:var(--celeste-pastel);   top:-60px;   left:-60px;  animation-delay:0s; }
+.b2 { width:160px; height:160px; background:var(--amarillo-pastel); bottom:-40px; right:-40px; animation-delay:1.5s; }
+.b3 { width:100px; height:100px; background:var(--lavanda-pastel);   top:30%;     left:5%;     animation-delay:3s; }
+.b4 { width:80px;  height:80px;  background:var(--verde-pastel);    top:20%;     right:8%;    animation-delay:2s; }
+.b5 { width:120px; height:120px; background:var(--rosa-pastel);     bottom:10%;  left:15%;    animation-delay:4s; }
+.b6 { width:90px;  height:90px;  background:var(--durazno-pastel);  top:60%;     right:20%;   animation-delay:2.5s; }
 
 @keyframes flotar {
   0%,100% { transform: translateY(0); }

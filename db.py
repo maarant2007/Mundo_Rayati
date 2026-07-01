@@ -1,12 +1,7 @@
 import pyodbc
-
-# ============================
-# COMPLETA ESTOS DATOS
-# ============================
 SERVER   = 'localhost'   # Instancia por defecto (MSSQLSERVER), sin sufijo
 DATABASE = 'BD_Mundo_Rayati'
 DRIVER   = 'ODBC Driver 18 for SQL Server'
-
 # Autenticacion de Windows: usa tu usuario de Windows actual automaticamente,
 # no necesita UID ni PWD.
 CONN_STRING = (
@@ -16,16 +11,10 @@ CONN_STRING = (
     f'Trusted_Connection=yes;'
     f'TrustServerCertificate=yes;'
 )
-
-
 def get_connection():
     """Abre y devuelve una nueva conexion a la base de datos."""
     return pyodbc.connect(CONN_STRING)
 
-
-# ============================
-# PRUEBA RAPIDA DE CONEXION
-# ============================
 if __name__ == '__main__':
     try:
         conn = get_connection()

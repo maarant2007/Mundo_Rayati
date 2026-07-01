@@ -1,22 +1,22 @@
 :root {
-  --azul:    #1a7fc1;
-  --azul-c:  #4fb3ef;
-  --rojo:    #e8322a;
-  --verde:   #3ab54a;
-  --amarillo:#f5b800;
-  --morado:  #9b3fbf;
-  --naranja: #f47920;
+  --azul:    #4A90C2;  /* antes #1a7fc1 — azul más suave, transmite confianza */
+  --azul-c:  #7FC4E8;  /* antes #4fb3ef — celeste de apoyo */
+  --rojo:    #E8746B;  /* antes #e8322a — coral cálido en vez de rojo duro */
+  --verde:   #5FB88F;  /* antes #3ab54a — verde salvia */
+  --amarillo:#F2BB4E;  /* antes #f5b800 — dorado miel */
+  --morado:  #A67FC4;  /* antes #9b3fbf — lavanda */
+  --naranja: #F0955C;  /* antes #f47920 — durazno */
   --blanco:  #ffffff;
-  --gris-f:  #f4f8ff;
-  --texto:   #2d3a4a;
+  --gris-f:  #FAF8FC;  /* fondo general, tono cálido y neutro */
+  --texto:   #384154;  /* gris azulado, más suave que el negro puro */
 
-  /* Paleta pastel (derivada del logo + rosa pastel) */
   --rosa-pastel:     #FBD3E9;
   --celeste-pastel:  #AEE3F7;
   --amarillo-pastel: #FFEDA8;
   --verde-pastel:    #C3F2D9;
   --lavanda-pastel:  #E4CCFA;
   --durazno-pastel:  #FFD9B8;
+  --sombra-suave: 0 4px 18px rgba(56, 65, 84, 0.08);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -26,6 +26,7 @@ body {
   background: var(--gris-f);
   color: var(--texto);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased; /* tipografía más nítida */
 }
 
 /* NAV */
@@ -85,7 +86,7 @@ nav {
   transition: background .2s, border-color .2s, transform .2s;
 }
 .nav-links .btn-admin:hover {
-  background: #185FA5;
+  background: #2E5F84;
   border-color: var(--azul-c);
   transform: translateY(-1px);
 }
@@ -142,7 +143,7 @@ nav {
   border-radius: 30px;
   margin-bottom: 22px;
   letter-spacing: .5px;
-  box-shadow: 0 2px 8px rgba(26,127,193,.15);
+  box-shadow: 0 2px 8px rgba(74,144,194,.15);
   animation: aparecer .7s ease both;
 }
 
@@ -183,10 +184,10 @@ nav {
   padding: 14px 32px;
   border-radius: 40px;
   text-decoration: none;
-  box-shadow: 0 6px 20px rgba(26,127,193,.35);
+  box-shadow: 0 6px 20px rgba(74,144,194,.35);
   transition: transform .2s, box-shadow .2s;
 }
-.btn-primary:hover { transform:translateY(-3px); box-shadow:0 10px 28px rgba(26,127,193,.45); }
+.btn-primary:hover { transform:translateY(-3px); box-shadow:0 10px 28px rgba(74,144,194,.45); }
 
 .btn-secondary {
   background: white;
@@ -274,12 +275,12 @@ section { padding: 80px 20px; }
   position: relative;
   overflow: hidden;
   transition: transform .25s, box-shadow .25s;
-  box-shadow: 0 6px 24px rgba(0,0,0,.12);
+  box-shadow: var(--sombra-suave);
 }
-.nivel-card:hover { transform:translateY(-6px); box-shadow:0 14px 36px rgba(0,0,0,.18); }
-.nivel-card.inicial  { background: linear-gradient(135deg, #f47920, #f5b800); }
-.nivel-card.primaria { background: linear-gradient(135deg, #1a7fc1, #4fb3ef); }
-.nivel-card.talleres { background: linear-gradient(135deg, #3ab54a, #a3d977); }
+.nivel-card:hover { transform:translateY(-6px); box-shadow:0 14px 36px rgba(0,0,0,.14); }
+.nivel-card.inicial  { background: linear-gradient(135deg, var(--naranja), var(--amarillo)); }
+.nivel-card.primaria { background: linear-gradient(135deg, var(--azul), var(--azul-c)); }
+.nivel-card.talleres { background: linear-gradient(135deg, var(--verde), #a3d977); }
 .nivel-card .nivel-icon { font-size: 48px; margin-bottom: 16px; display: block; }
 .nivel-card h3 {
   font-family: 'Baloo 2', cursive;
@@ -312,7 +313,7 @@ section { padding: 80px 20px; }
   background: white;
   border-radius: 18px;
   padding: 30px 24px;
-  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+  box-shadow: var(--sombra-suave);
   border-top: 5px solid;
   transition: transform .2s;
 }
@@ -334,10 +335,10 @@ section { padding: 80px 20px; }
 .razon-card p { font-size: 14px; color:#6a7a8a; font-weight:600; line-height:1.6; }
 
 /* VALORES */
-#valores { background: linear-gradient(135deg, #1a7fc1 0%, #9b3fbf 100%); }
-#valores .section-label { color: #a3d4ff; }
+#valores { background: linear-gradient(135deg, var(--azul) 0%, var(--morado) 100%); }
+#valores .section-label { color: #cfe6f7; }
 #valores .section-title { color: white; }
-#valores .section-sub   { color: rgba(255,255,255,.8); }
+#valores .section-sub   { color: rgba(255,255,255,.85); }
 .valores-grid {
   display: flex;
   justify-content: center;
@@ -347,8 +348,8 @@ section { padding: 80px 20px; }
   margin: 0 auto;
 }
 .valor-pill {
-  background: rgba(255,255,255,.15);
-  border: 2px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.18);
+  border: 2px solid rgba(255,255,255,.35);
   color: white;
   padding: 12px 24px;
   border-radius: 40px;
@@ -356,7 +357,7 @@ section { padding: 80px 20px; }
   font-weight: 700;
   transition: background .2s;
 }
-.valor-pill:hover { background: rgba(255,255,255,.3); }
+.valor-pill:hover { background: rgba(255,255,255,.32); }
 
 /* TIENDA */
 #tienda { background: white; }
@@ -398,12 +399,12 @@ section { padding: 80px 20px; }
   background: var(--gris-f);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+  box-shadow: var(--sombra-suave);
   transition: transform .25s, box-shadow .25s;
   display: none;
 }
 .producto-card.visible { display: flex; flex-direction: column; }
-.producto-card:hover { transform:translateY(-5px); box-shadow:0 12px 32px rgba(0,0,0,.13); }
+.producto-card:hover { transform:translateY(-5px); box-shadow:0 12px 32px rgba(0,0,0,.12); }
 
 .prod-emoji {
   font-size: 56px;
@@ -447,7 +448,7 @@ section { padding: 80px 20px; }
   color: var(--rojo);
 }
 .btn-pedir {
-  background: linear-gradient(135deg, var(--verde), #6dd67a);
+  background: linear-gradient(135deg, var(--verde), #8fd4b3);
   color: white;
   border: none;
   padding: 8px 18px;
@@ -475,7 +476,7 @@ section { padding: 80px 20px; }
 .tienda-nota strong { color: var(--azul); }
 
 /* MATRÍCULA */
-#matricula { background: linear-gradient(160deg, #fff7e6 0%, #ffe8e8 100%); }
+#matricula { background: linear-gradient(160deg, #FFF8EE 0%, #FCEEEE 100%); }
 #matricula .section-label { color: var(--naranja); }
 
 .matricula-wrap {
@@ -494,7 +495,7 @@ section { padding: 80px 20px; }
   border-radius: 18px;
   padding: 24px 20px;
   text-align: center;
-  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+  box-shadow: var(--sombra-suave);
   position: relative;
 }
 .paso-num {
@@ -524,7 +525,7 @@ section { padding: 80px 20px; }
   background: white;
   border-radius: 24px;
   padding: 44px 40px;
-  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,.07);
   border-top: 5px solid var(--rojo);
 }
 .matricula-form .form-titulo {
@@ -560,7 +561,7 @@ section { padding: 80px 20px; }
 .form-row textarea {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #d8e6f3;
+  border: 2px solid #e3ecf5;
   border-radius: 12px;
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
@@ -591,8 +592,8 @@ section { padding: 80px 20px; }
 .btn-matricula-form:hover { opacity:.9; transform:translateY(-2px); }
 
 .matricula-requisitos {
-  background: #fff4e6;
-  border: 2px solid #ffd199;
+  background: #FFF6EA;
+  border: 2px solid #F5DBB8;
   border-radius: 16px;
   padding: 20px 24px;
   margin-top: 28px;
@@ -641,7 +642,7 @@ section { padding: 80px 20px; }
   background: white;
   border-radius: 18px;
   padding: 22px 24px;
-  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+  box-shadow: var(--sombra-suave);
   display: flex;
   align-items: flex-start;
   gap: 14px;
@@ -672,23 +673,23 @@ section { padding: 80px 20px; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #25d366;
+  background: #3FCB77;
   color: white;
   font-weight: 800;
   font-size: 15px;
   padding: 14px 24px;
   border-radius: 14px;
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(37,211,102,.30);
+  box-shadow: 0 4px 16px rgba(63,203,119,.30);
   transition: transform .2s, box-shadow .2s;
 }
-.btn-whatsapp:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(37,211,102,.40); }
+.btn-whatsapp:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(63,203,119,.40); }
 
 .contacto-form {
   background: white;
   border-radius: 24px;
   padding: 40px 36px;
-  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,.07);
   border-top: 5px solid var(--azul);
 }
 .contacto-form .form-titulo {
@@ -777,7 +778,7 @@ footer {
 .rainbow-bar {
   height: 6px;
   background: linear-gradient(90deg,
-    #e8322a 0%, #f47920 17%, #f5b800 33%,
-    #3ab54a 50%, #1a7fc1 67%, #4fb3ef 83%, #9b3fbf 100%
+    var(--rojo) 0%, var(--naranja) 17%, var(--amarillo) 33%,
+    var(--verde) 50%, var(--azul) 67%, var(--azul-c) 83%, var(--morado) 100%
   );
 }

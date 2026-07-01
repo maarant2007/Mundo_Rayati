@@ -1,6 +1,3 @@
-/* ============================
-   DATOS INICIALES (demo)
-   ============================ */
 let matriculas = [
   { id: 1, alumno: 'Ana García',    nivel: 'Inicial – 4 años',      apoderado: 'Rosa García',   telefono: '+51 945373930', estado: 'Confirmado' },
   { id: 2, alumno: 'Luis Pérez',    nivel: 'Primaria – 2° grado',   apoderado: 'Carlos Pérez',  telefono: '+51 912345678', estado: 'Pendiente'  },
@@ -31,10 +28,6 @@ let productos = [
 /* Contadores de ID para nuevos registros */
 let nextId = { mat: 4, alu: 5, doc: 4, prod: 6 };
 
-
-/* ============================
-   HELPERS
-   ============================ */
 function estadoBadge(estado) {
   if (estado === 'Confirmado') return 'badge-green';
   if (estado === 'Pendiente')  return 'badge-amber';
@@ -104,9 +97,9 @@ function updateDash() {
   document.getElementById('m-docentes').textContent = docentes.length;
   document.getElementById('m-productos').textContent = productos.length;
 
-  /* Gráfico: Matrículas por nivel */
+  /* Gráfico: Matrículas por nivel — colores alineados a la paleta pastel del sitio */
   const niveles  = ['Inicial', 'Primaria'];
-  const colores  = ['#185FA5', '#0F6E56'];
+  const colores  = ['#F0955C', '#4A90C2'];
   const maxN     = Math.max(...niveles.map(n => matriculas.filter(m => m.nivel.startsWith(n)).length), 1);
 
   document.getElementById('chart-niveles').innerHTML = niveles.map((n, i) => {
@@ -124,7 +117,7 @@ function updateDash() {
 
   /* Gráfico: Productos por categoría */
   const cats    = ['Libros', 'Uniforme', 'Agenda', 'Útiles'];
-  const colCat  = ['#185FA5', '#0F6E56', '#BA7517', '#993C1D'];
+  const colCat  = ['#4A90C2', '#5FB88F', '#F2BB4E', '#A67FC4'];
   const maxC    = Math.max(...cats.map(c => productos.filter(p => p.cat === c).length), 1);
 
   document.getElementById('chart-cats').innerHTML = cats.map((c, i) => {

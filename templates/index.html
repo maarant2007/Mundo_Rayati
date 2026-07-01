@@ -16,7 +16,10 @@
     <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="Mundo de Rayati" style="height:54px; width:auto;">
     <span style="font-family:'Baloo 2',cursive;font-weight:800;font-size:20px;color:var(--azul);margin-left:10px;">Mundo de Rayati</span>
   </a>
-  <ul class="nav-links">
+  <button class="nav-toggle" id="navToggle" onclick="toggleNav()" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="#niveles">Niveles</a></li>
     <li><a href="#porque">¿Por qué?</a></li>
     <li><a href="#tienda">Tienda</a></li>

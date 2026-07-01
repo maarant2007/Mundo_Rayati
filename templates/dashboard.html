@@ -1,14 +1,438 @@
-from flask import Flask, render_template
- 
-app = Flask(__name__)
- 
-@app.route("/")
-def inicio():
-    return render_template("index.html")
- 
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard.html")
- 
-if __name__ == "__main__":
-    app.run(debug=True)
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin · Mundo de Rayati</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="Mundo de Rayati" style="width:34px; height:34px; border-radius:8px; object-fit:cover;">
+      <div>
+        <div class="logo-nombre">Mundo de Rayati</div>
+        <div class="logo-sub">Panel administrativo</div>
+      </div>
+    </div>
+
+    <nav>
+      <div class="nav-item active" onclick="showPage('dashboard', this)">
+        <i class="ti ti-layout-dashboard"></i> Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('matriculas', this)">
+        <i class="ti ti-clipboard-list"></i> Matrículas
+      </div>
+      <div class="nav-item" onclick="showPage('alumnos', this)">
+        <i class="ti ti-users"></i> Alumnos
+      </div>
+      <div class="nav-item" onclick="showPage('docentes', this)">
+        <i class="ti ti-chalkboard"></i> Docentes
+      </div>
+      <div class="nav-item" onclick="showPage('productos', this)">
+        <i class="ti ti-shopping-cart"></i> Tienda
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/" class="btn-volver"><i class="ti ti-arrow-left"></i> Volver al sitio</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h2>Dashboard</h2>
+        <p>Resumen general de Mundo de Rayati</p>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Matrículas</div>
+          <div class="metric-value" id="m-total">0</div>
+          <div class="metric-sub">Total registradas</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Alumnos</div>
+          <div class="metric-value" id="m-alumnos">0</div>
+          <div class="metric-sub">Activos en el colegio</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Docentes</div>
+          <div class="metric-value" id="m-docentes">0</div>
+          <div class="metric-sub">Plana educativa</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Productos</div>
+          <div class="metric-value" id="m-productos">0</div>
+          <div class="metric-sub">En tienda escolar</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>Matrículas por nivel</h3>
+          </div>
+          <div class="bar-chart" id="chart-niveles"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Productos por categoría</h3>
+          </div>
+          <div class="bar-chart" id="chart-cats"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Últimas matrículas</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Alumno</th>
+              <th>Nivel</th>
+              <th>Apoderado</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="dash-matriculas"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ MATRÍCULAS ============ -->
+    <section class="page" id="page-matriculas">
+      <div class="page-header">
+        <h2>Matrículas</h2>
+        <p>Gestiona las solicitudes de matrícula 2026</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Listado de matrículas</h3>
+          <button class="btn btn-primary" onclick="document.getElementById('mat-edit-id').value=-1; document.getElementById('mat-modal-title').textContent='Nueva matrícula'; limpiarCampos(['mat-alumno','mat-apoderado','mat-telefono']); openModal('mat')">
+            <i class="ti ti-plus"></i> Nueva matrícula
+          </button>
+        </div>
+
+        <div class="search-bar">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Buscar por alumno, nivel o apoderado..." oninput="filterTable('mat-tbody', this.value, [0,1,2])">
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Alumno</th>
+              <th>Nivel</th>
+              <th>Apoderado</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="mat-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ ALUMNOS ============ -->
+    <section class="page" id="page-alumnos">
+      <div class="page-header">
+        <h2>Alumnos</h2>
+        <p>Alumnos matriculados actualmente</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Listado de alumnos</h3>
+          <button class="btn btn-primary" onclick="document.getElementById('alu-edit-id').value=-1; document.getElementById('alu-modal-title').textContent='Nuevo alumno'; limpiarCampos(['alu-nombre','alu-edad','alu-apoderado','alu-telefono']); openModal('alu')">
+            <i class="ti ti-plus"></i> Nuevo alumno
+          </button>
+        </div>
+
+        <div class="search-bar">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Buscar por nombre, grado o apoderado..." oninput="filterTable('alu-tbody', this.value, [0,1,3])">
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Grado</th>
+              <th>Edad</th>
+              <th>Apoderado</th>
+              <th>Teléfono</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="alu-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ DOCENTES ============ -->
+    <section class="page" id="page-docentes">
+      <div class="page-header">
+        <h2>Docentes</h2>
+        <p>Plana docente de la institución</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Listado de docentes</h3>
+          <button class="btn btn-primary" onclick="document.getElementById('doc-edit-id').value=-1; document.getElementById('doc-modal-title').textContent='Nuevo docente'; limpiarCampos(['doc-nombre','doc-especialidad','doc-telefono']); openModal('doc')">
+            <i class="ti ti-plus"></i> Nuevo docente
+          </button>
+        </div>
+
+        <div class="search-bar">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Buscar por nombre o especialidad..." oninput="filterTable('doc-tbody', this.value, [0,1])">
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Especialidad</th>
+              <th>Nivel</th>
+              <th>Teléfono</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="doc-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTOS / TIENDA ============ -->
+    <section class="page" id="page-productos">
+      <div class="page-header">
+        <h2>Tienda escolar</h2>
+        <p>Libros, uniformes y agendas disponibles</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Listado de productos</h3>
+          <button class="btn btn-primary" onclick="document.getElementById('prod-edit-id').value=-1; document.getElementById('prod-modal-title').textContent='Nuevo producto'; limpiarCampos(['prod-nombre','prod-precio','prod-stock']); openModal('prod')">
+            <i class="ti ti-plus"></i> Nuevo producto
+          </button>
+        </div>
+
+        <div class="search-bar">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Buscar por nombre o categoría..." oninput="filterTable('prod-tbody', this.value, [0,1])">
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="prod-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ MODAL: MATRÍCULA ============ -->
+<div class="modal-bg" id="modal-mat">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="mat-modal-title">Nueva matrícula</h3>
+      <button class="btn-close" onclick="closeModal('mat')"><i class="ti ti-x"></i></button>
+    </div>
+
+    <input type="hidden" id="mat-edit-id" value="-1">
+
+    <div class="form-row">
+      <label>Nombre del alumno</label>
+      <input type="text" id="mat-alumno" placeholder="Nombre completo">
+    </div>
+    <div class="form-row">
+      <label>Nivel</label>
+      <select id="mat-nivel">
+        <option>Inicial – 2 años</option>
+        <option>Inicial – 3 años</option>
+        <option>Inicial – 4 años</option>
+        <option>Inicial – 5 años</option>
+        <option>Primaria – 1° grado</option>
+        <option>Primaria – 2° grado</option>
+        <option>Primaria – 3° grado</option>
+        <option>Primaria – 4° grado</option>
+        <option>Primaria – 5° grado</option>
+        <option>Primaria – 6° grado</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Apoderado</label>
+      <input type="text" id="mat-apoderado" placeholder="Nombre del apoderado">
+    </div>
+    <div class="form-row">
+      <label>Teléfono</label>
+      <input type="tel" id="mat-telefono" placeholder="+51 900000000">
+    </div>
+    <div class="form-row">
+      <label>Estado</label>
+      <select id="mat-estado">
+        <option>Pendiente</option>
+        <option>En proceso</option>
+        <option>Confirmado</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal('mat')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMat()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: ALUMNO ============ -->
+<div class="modal-bg" id="modal-alu">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="alu-modal-title">Nuevo alumno</h3>
+      <button class="btn-close" onclick="closeModal('alu')"><i class="ti ti-x"></i></button>
+    </div>
+
+    <input type="hidden" id="alu-edit-id" value="-1">
+
+    <div class="form-row">
+      <label>Nombre del alumno</label>
+      <input type="text" id="alu-nombre" placeholder="Nombre completo">
+    </div>
+    <div class="form-row">
+      <label>Grado</label>
+      <select id="alu-grado">
+        <option>Inicial – 3 años</option>
+        <option>Inicial – 4 años</option>
+        <option>Inicial – 5 años</option>
+        <option>Primaria – 1° grado</option>
+        <option>Primaria – 2° grado</option>
+        <option>Primaria – 3° grado</option>
+        <option>Primaria – 4° grado</option>
+        <option>Primaria – 5° grado</option>
+        <option>Primaria – 6° grado</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Edad</label>
+      <input type="number" id="alu-edad" min="3" max="13" placeholder="Ej: 6">
+    </div>
+    <div class="form-row">
+      <label>Apoderado</label>
+      <input type="text" id="alu-apoderado" placeholder="Nombre del apoderado">
+    </div>
+    <div class="form-row">
+      <label>Teléfono</label>
+      <input type="tel" id="alu-telefono" placeholder="+51 900000000">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal('alu')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveAlu()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: DOCENTE ============ -->
+<div class="modal-bg" id="modal-doc">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="doc-modal-title">Nuevo docente</h3>
+      <button class="btn-close" onclick="closeModal('doc')"><i class="ti ti-x"></i></button>
+    </div>
+
+    <input type="hidden" id="doc-edit-id" value="-1">
+
+    <div class="form-row">
+      <label>Nombre del docente</label>
+      <input type="text" id="doc-nombre" placeholder="Ej: Sra. Lucía Mendoza">
+    </div>
+    <div class="form-row">
+      <label>Especialidad</label>
+      <input type="text" id="doc-especialidad" placeholder="Ej: Comunicación">
+    </div>
+    <div class="form-row">
+      <label>Nivel</label>
+      <select id="doc-nivel">
+        <option>Inicial</option>
+        <option>Primaria</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Teléfono</label>
+      <input type="tel" id="doc-telefono" placeholder="+51 900000000">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal('doc')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveDoc()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: PRODUCTO ============ -->
+<div class="modal-bg" id="modal-prod">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="prod-modal-title">Nuevo producto</h3>
+      <button class="btn-close" onclick="closeModal('prod')"><i class="ti ti-x"></i></button>
+    </div>
+
+    <input type="hidden" id="prod-edit-id" value="-1">
+
+    <div class="form-row">
+      <label>Nombre del producto</label>
+      <input type="text" id="prod-nombre" placeholder="Ej: Agenda Escolar">
+    </div>
+    <div class="form-row">
+      <label>Categoría</label>
+      <select id="prod-cat">
+        <option>Libros</option>
+        <option>Uniforme</option>
+        <option>Agenda</option>
+        <option>Útiles</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Precio (S/)</label>
+      <input type="number" id="prod-precio" step="0.10" min="0" placeholder="Ej: 25.00">
+    </div>
+    <div class="form-row">
+      <label>Stock</label>
+      <input type="number" id="prod-stock" min="0" placeholder="Ej: 30">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal('prod')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProd()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

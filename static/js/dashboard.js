@@ -1,33 +1,19 @@
-let matriculas = [
-  { id: 1, alumno: 'Ana García',    nivel: 'Inicial – 4 años',      apoderado: 'Rosa García',   telefono: '+51 945373930', estado: 'Confirmado' },
-  { id: 2, alumno: 'Luis Pérez',    nivel: 'Primaria – 2° grado',   apoderado: 'Carlos Pérez',  telefono: '+51 912345678', estado: 'Pendiente'  },
-  { id: 3, alumno: 'Sofía Torres',  nivel: 'Primaria – 5° grado',   apoderado: 'María Torres',  telefono: '+51 987654321', estado: 'En proceso' },
-];
+/* ============================================================
+   DASHBOARD — conectado a la API real (Flask + SQLite)
+   Los datos ya NO se guardan solo en memoria: cada acción
+   (crear, editar, eliminar) llama al backend y persiste.
+   ============================================================ */
 
-let alumnos = [
-  { id: 1, nombre: 'Ana García',    grado: 'Inicial – 4 años',    edad: 4,  apoderado: 'Rosa García',   telefono: '+51 945373930' },
-  { id: 2, nombre: 'Luis Pérez',    grado: 'Primaria – 2° grado', edad: 7,  apoderado: 'Carlos Pérez',  telefono: '+51 912345678' },
-  { id: 3, nombre: 'Sofía Torres',  grado: 'Primaria – 5° grado', edad: 11, apoderado: 'María Torres',  telefono: '+51 987654321' },
-  { id: 4, nombre: 'Diego Ramírez', grado: 'Primaria – 1° grado', edad: 6,  apoderado: 'Juan Ramírez',  telefono: '+51 934567890' },
-];
+let matriculas = [];
+let alumnos = [];
+let docentes = [];
+let productos = [];
 
-let docentes = [
-  { id: 1, nombre: 'Sra. Lucía Mendoza', especialidad: 'Comunicación', nivel: 'Primaria', telefono: '+51 911111111' },
-  { id: 2, nombre: 'Sr. Marcos Quispe',  especialidad: 'Matemática',   nivel: 'Primaria', telefono: '+51 922222222' },
-  { id: 3, nombre: 'Sra. Elena Vargas',  especialidad: 'Inicial',      nivel: 'Inicial',  telefono: '+51 933333333' },
-];
+const API = "/api";
 
-let productos = [
-  { id: 1, nombre: 'Comunicación – Nivel Inicial', cat: 'Libros',   precio: 35.00, stock: 20  },
-  { id: 2, nombre: 'Matemática – Nivel Inicial',   cat: 'Libros',   precio: 32.00, stock: 15  },
-  { id: 3, nombre: 'Polo Colegio',                 cat: 'Uniforme', precio: 28.00, stock: 50  },
-  { id: 4, nombre: 'Buzo Completo',                cat: 'Uniforme', precio: 85.00, stock: 30  },
-  { id: 5, nombre: 'Agenda Escolar',               cat: 'Agenda',   precio: 20.00, stock: 100 },
-];
-
-/* Contadores de ID para nuevos registros */
-let nextId = { mat: 4, alu: 5, doc: 4, prod: 6 };
-
+/* ============================
+   UTILIDADES
+   ============================ */
 function estadoBadge(estado) {
   if (estado === 'Confirmado') return 'badge-green';
   if (estado === 'Pendiente')  return 'badge-amber';
@@ -39,6 +25,62 @@ function limpiarCampos(ids) {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+}
+
+function showToast(mensaje, esError = false) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = mensaje;
+  toast.classList.toggle('error', esError);
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+/* Valida un conjunto de campos { idCampo: 'Etiqueta visible' }.
+   Marca en rojo los vacíos y devuelve la lista de etiquetas faltantes. */
+function validarCampos(mapaCampos) {
+  const faltantes = [];
+  Object.entries(mapaCampos).forEach(([id, etiqueta]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const valor = (el.value || '').toString().trim();
+    if (valor === '') {
+      el.classList.add('input-error');
+      faltantes.push(etiqueta);
+    } else {
+      el.classList.remove('input-error');
+    }
+  });
+  return faltantes;
+}
+
+function mostrarErrorModal(tipo, mensaje) {
+  const box = document.getElementById(tipo + '-form-error');
+  if (!box) return;
+  box.textContent = mensaje;
+  box.classList.add('show');
+}
+
+function limpiarErrorModal(tipo) {
+  const box = document.getElementById(tipo + '-form-error');
+  if (box) { box.textContent = ''; box.classList.remove('show'); }
+  document.querySelectorAll(`#modal-${tipo} .input-error`).forEach(el => el.classList.remove('input-error'));
+}
+
+async function apiFetch(url, options = {}) {
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options
+  });
+  let data = null;
+  try { data = await res.json(); } catch (e) { /* sin cuerpo */ }
+  return { ok: res.ok, status: res.status, data };
 }
 
 
@@ -62,16 +104,49 @@ function openModal(type) {
 
 function closeModal(type) {
   document.getElementById('modal-' + type).classList.remove('open');
+  limpiarErrorModal(type);
 }
 
-/* Cerrar modal al hacer clic fuera */
-document.querySelectorAll('.modal-bg').forEach(bg => {
-  bg.addEventListener('click', function (e) {
-    if (e.target === this) {
-      this.classList.remove('open');
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.modal-bg').forEach(bg => {
+    bg.addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('open');
+    });
   });
 });
+
+/* Abrir modal en modo "nuevo" para cada tipo */
+function abrirNuevaMat() {
+  document.getElementById('mat-edit-id').value = -1;
+  document.getElementById('mat-modal-title').textContent = 'Nueva matrícula';
+  limpiarCampos(['mat-alumno', 'mat-edad', 'mat-apoderado', 'mat-telefono', 'mat-comentarios']);
+  document.getElementById('mat-nivel').value = '';
+  document.getElementById('mat-estado').value = 'Pendiente';
+  limpiarErrorModal('mat');
+  openModal('mat');
+}
+function abrirNuevoAlu() {
+  document.getElementById('alu-edit-id').value = -1;
+  document.getElementById('alu-modal-title').textContent = 'Nuevo alumno';
+  limpiarCampos(['alu-nombre', 'alu-edad', 'alu-apoderado', 'alu-telefono']);
+  document.getElementById('alu-grado').value = '';
+  limpiarErrorModal('alu');
+  openModal('alu');
+}
+function abrirNuevoDoc() {
+  document.getElementById('doc-edit-id').value = -1;
+  document.getElementById('doc-modal-title').textContent = 'Nuevo docente';
+  limpiarCampos(['doc-nombre', 'doc-especialidad', 'doc-telefono']);
+  limpiarErrorModal('doc');
+  openModal('doc');
+}
+function abrirNuevoProd() {
+  document.getElementById('prod-edit-id').value = -1;
+  document.getElementById('prod-modal-title').textContent = 'Nuevo producto';
+  limpiarCampos(['prod-nombre', 'prod-precio', 'prod-stock']);
+  limpiarErrorModal('prod');
+  openModal('prod');
+}
 
 
 /* ============================
@@ -97,7 +172,6 @@ function updateDash() {
   document.getElementById('m-docentes').textContent = docentes.length;
   document.getElementById('m-productos').textContent = productos.length;
 
-  /* Gráfico: Matrículas por nivel — colores alineados a la paleta pastel del sitio */
   const niveles  = ['Inicial', 'Primaria'];
   const colores  = ['#F0955C', '#4A90C2'];
   const maxN     = Math.max(...niveles.map(n => matriculas.filter(m => m.nivel.startsWith(n)).length), 1);
@@ -115,13 +189,12 @@ function updateDash() {
       </div>`;
   }).join('');
 
-  /* Gráfico: Productos por categoría */
   const cats    = ['Libros', 'Uniforme', 'Agenda', 'Útiles'];
   const colCat  = ['#4A90C2', '#5FB88F', '#F2BB4E', '#A67FC4'];
-  const maxC    = Math.max(...cats.map(c => productos.filter(p => p.cat === c).length), 1);
+  const maxC    = Math.max(...cats.map(c => productos.filter(p => p.categoria === c).length), 1);
 
   document.getElementById('chart-cats').innerHTML = cats.map((c, i) => {
-    const cnt = productos.filter(p => p.cat === c).length;
+    const cnt = productos.filter(p => p.categoria === c).length;
     const pct = Math.round((cnt / maxC) * 100);
     return `
       <div class="bar-row">
@@ -133,8 +206,7 @@ function updateDash() {
       </div>`;
   }).join('');
 
-  /* Tabla: últimas 3 matrículas */
-  document.getElementById('dash-matriculas').innerHTML = matriculas.slice(-3).reverse().map(m => `
+  document.getElementById('dash-matriculas').innerHTML = matriculas.slice(0, 3).map(m => `
     <tr>
       <td>${m.alumno}</td>
       <td>${m.nivel}</td>
@@ -158,42 +230,57 @@ function renderMat() {
       <td><span class="badge ${estadoBadge(m.estado)}">${m.estado}</span></td>
       <td>
         <div class="acciones">
-          <button class="btn btn-sm" title="Editar" onclick="editMat(${m.id})">
-            <i class="ti ti-edit"></i>
-          </button>
-          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteMat(${m.id})">
-            <i class="ti ti-trash"></i>
-          </button>
+          <button class="btn btn-sm" title="Editar" onclick="editMat(${m.id})"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteMat(${m.id})"><i class="ti ti-trash"></i></button>
         </div>
       </td>
     </tr>`).join('');
   updateDash();
 }
 
-function saveMat() {
+async function cargarMatriculas() {
+  const { ok, data } = await apiFetch(`${API}/matriculas`);
+  if (ok) { matriculas = data; renderMat(); }
+}
+
+async function saveMat() {
+  limpiarErrorModal('mat');
+  const faltantes = validarCampos({
+    'mat-alumno': 'Nombre del alumno',
+    'mat-edad': 'Edad',
+    'mat-nivel': 'Nivel',
+    'mat-apoderado': 'Apoderado',
+    'mat-telefono': 'Teléfono',
+    'mat-estado': 'Estado'
+  });
+  if (faltantes.length) {
+    mostrarErrorModal('mat', 'Completa estos campos obligatorios: ' + faltantes.join(', '));
+    return;
+  }
+
   const editId = parseInt(document.getElementById('mat-edit-id').value);
-  const obj = {
-    id:         editId === -1 ? nextId.mat++ : editId,
-    alumno:     document.getElementById('mat-alumno').value.trim()    || 'Sin nombre',
-    nivel:      document.getElementById('mat-nivel').value,
-    apoderado:  document.getElementById('mat-apoderado').value.trim() || '—',
-    telefono:   document.getElementById('mat-telefono').value.trim()  || '—',
-    estado:     document.getElementById('mat-estado').value,
+  const payload = {
+    alumno: document.getElementById('mat-alumno').value.trim(),
+    edad: parseInt(document.getElementById('mat-edad').value),
+    nivel: document.getElementById('mat-nivel').value,
+    apoderado: document.getElementById('mat-apoderado').value.trim(),
+    telefono: document.getElementById('mat-telefono').value.trim(),
+    comentarios: document.getElementById('mat-comentarios').value.trim(),
+    estado: document.getElementById('mat-estado').value,
   };
 
-  if (editId === -1) {
-    matriculas.push(obj);
-  } else {
-    const idx = matriculas.findIndex(m => m.id === editId);
-    if (idx > -1) matriculas[idx] = obj;
+  const url = editId === -1 ? `${API}/matriculas` : `${API}/matriculas/${editId}`;
+  const method = editId === -1 ? 'POST' : 'PUT';
+  const { ok, data } = await apiFetch(url, { method, body: JSON.stringify(payload) });
+
+  if (!ok) {
+    mostrarErrorModal('mat', data && data.error ? data.error + ': ' + (data.campos || []).join(', ') : 'No se pudo guardar.');
+    return;
   }
 
   closeModal('mat');
-  renderMat();
-  /* Resetear modal */
-  document.getElementById('mat-edit-id').value = '-1';
-  document.getElementById('mat-modal-title').textContent = 'Nueva matrícula';
-  limpiarCampos(['mat-alumno', 'mat-apoderado', 'mat-telefono']);
+  await cargarMatriculas();
+  showToast(editId === -1 ? 'Matrícula creada correctamente' : 'Matrícula actualizada');
 }
 
 function editMat(id) {
@@ -202,17 +289,21 @@ function editMat(id) {
   document.getElementById('mat-edit-id').value          = id;
   document.getElementById('mat-modal-title').textContent = 'Editar matrícula';
   document.getElementById('mat-alumno').value            = m.alumno;
-  document.getElementById('mat-nivel').value             = m.nivel;
-  document.getElementById('mat-apoderado').value         = m.apoderado;
-  document.getElementById('mat-telefono').value          = m.telefono;
-  document.getElementById('mat-estado').value            = m.estado;
+  document.getElementById('mat-edad').value               = m.edad || '';
+  document.getElementById('mat-nivel').value              = m.nivel;
+  document.getElementById('mat-apoderado').value          = m.apoderado;
+  document.getElementById('mat-telefono').value           = m.telefono;
+  document.getElementById('mat-comentarios').value        = m.comentarios || '';
+  document.getElementById('mat-estado').value             = m.estado;
+  limpiarErrorModal('mat');
   openModal('mat');
 }
 
-function deleteMat(id) {
+async function deleteMat(id) {
   if (!confirm('¿Eliminar esta matrícula?')) return;
-  matriculas = matriculas.filter(m => m.id !== id);
-  renderMat();
+  const { ok } = await apiFetch(`${API}/matriculas/${id}`, { method: 'DELETE' });
+  if (ok) { await cargarMatriculas(); showToast('Matrícula eliminada'); }
+  else showToast('No se pudo eliminar', true);
 }
 
 
@@ -230,41 +321,54 @@ function renderAlu() {
       <td>${a.telefono}</td>
       <td>
         <div class="acciones">
-          <button class="btn btn-sm" title="Editar" onclick="editAlu(${a.id})">
-            <i class="ti ti-edit"></i>
-          </button>
-          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteAlu(${a.id})">
-            <i class="ti ti-trash"></i>
-          </button>
+          <button class="btn btn-sm" title="Editar" onclick="editAlu(${a.id})"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteAlu(${a.id})"><i class="ti ti-trash"></i></button>
         </div>
       </td>
     </tr>`).join('');
   updateDash();
 }
 
-function saveAlu() {
+async function cargarAlumnos() {
+  const { ok, data } = await apiFetch(`${API}/alumnos`);
+  if (ok) { alumnos = data; renderAlu(); }
+}
+
+async function saveAlu() {
+  limpiarErrorModal('alu');
+  const faltantes = validarCampos({
+    'alu-nombre': 'Nombre',
+    'alu-grado': 'Grado',
+    'alu-edad': 'Edad',
+    'alu-apoderado': 'Apoderado',
+    'alu-telefono': 'Teléfono'
+  });
+  if (faltantes.length) {
+    mostrarErrorModal('alu', 'Completa estos campos obligatorios: ' + faltantes.join(', '));
+    return;
+  }
+
   const editId = parseInt(document.getElementById('alu-edit-id').value);
-  const obj = {
-    id:        editId === -1 ? nextId.alu++ : editId,
-    nombre:    document.getElementById('alu-nombre').value.trim()    || 'Sin nombre',
-    grado:     document.getElementById('alu-grado').value,
-    edad:      parseInt(document.getElementById('alu-edad').value)   || 0,
-    apoderado: document.getElementById('alu-apoderado').value.trim() || '—',
-    telefono:  document.getElementById('alu-telefono').value.trim()  || '—',
+  const payload = {
+    nombre: document.getElementById('alu-nombre').value.trim(),
+    grado: document.getElementById('alu-grado').value,
+    edad: parseInt(document.getElementById('alu-edad').value),
+    apoderado: document.getElementById('alu-apoderado').value.trim(),
+    telefono: document.getElementById('alu-telefono').value.trim(),
   };
 
-  if (editId === -1) {
-    alumnos.push(obj);
-  } else {
-    const idx = alumnos.findIndex(a => a.id === editId);
-    if (idx > -1) alumnos[idx] = obj;
+  const url = editId === -1 ? `${API}/alumnos` : `${API}/alumnos/${editId}`;
+  const method = editId === -1 ? 'POST' : 'PUT';
+  const { ok, data } = await apiFetch(url, { method, body: JSON.stringify(payload) });
+
+  if (!ok) {
+    mostrarErrorModal('alu', data && data.error ? data.error + ': ' + (data.campos || []).join(', ') : 'No se pudo guardar.');
+    return;
   }
 
   closeModal('alu');
-  renderAlu();
-  document.getElementById('alu-edit-id').value = '-1';
-  document.getElementById('alu-modal-title').textContent = 'Nuevo alumno';
-  limpiarCampos(['alu-nombre', 'alu-edad', 'alu-apoderado', 'alu-telefono']);
+  await cargarAlumnos();
+  showToast(editId === -1 ? 'Alumno agregado correctamente' : 'Alumno actualizado');
 }
 
 function editAlu(id) {
@@ -277,13 +381,15 @@ function editAlu(id) {
   document.getElementById('alu-edad').value               = a.edad;
   document.getElementById('alu-apoderado').value          = a.apoderado;
   document.getElementById('alu-telefono').value           = a.telefono;
+  limpiarErrorModal('alu');
   openModal('alu');
 }
 
-function deleteAlu(id) {
+async function deleteAlu(id) {
   if (!confirm('¿Eliminar este alumno?')) return;
-  alumnos = alumnos.filter(a => a.id !== id);
-  renderAlu();
+  const { ok } = await apiFetch(`${API}/alumnos/${id}`, { method: 'DELETE' });
+  if (ok) { await cargarAlumnos(); showToast('Alumno eliminado'); }
+  else showToast('No se pudo eliminar', true);
 }
 
 
@@ -300,40 +406,52 @@ function renderDoc() {
       <td>${d.telefono}</td>
       <td>
         <div class="acciones">
-          <button class="btn btn-sm" title="Editar" onclick="editDoc(${d.id})">
-            <i class="ti ti-edit"></i>
-          </button>
-          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteDoc(${d.id})">
-            <i class="ti ti-trash"></i>
-          </button>
+          <button class="btn btn-sm" title="Editar" onclick="editDoc(${d.id})"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteDoc(${d.id})"><i class="ti ti-trash"></i></button>
         </div>
       </td>
     </tr>`).join('');
   updateDash();
 }
 
-function saveDoc() {
+async function cargarDocentes() {
+  const { ok, data } = await apiFetch(`${API}/docentes`);
+  if (ok) { docentes = data; renderDoc(); }
+}
+
+async function saveDoc() {
+  limpiarErrorModal('doc');
+  const faltantes = validarCampos({
+    'doc-nombre': 'Nombre',
+    'doc-especialidad': 'Especialidad',
+    'doc-nivel': 'Nivel',
+    'doc-telefono': 'Teléfono'
+  });
+  if (faltantes.length) {
+    mostrarErrorModal('doc', 'Completa estos campos obligatorios: ' + faltantes.join(', '));
+    return;
+  }
+
   const editId = parseInt(document.getElementById('doc-edit-id').value);
-  const obj = {
-    id:           editId === -1 ? nextId.doc++ : editId,
-    nombre:       document.getElementById('doc-nombre').value.trim()       || 'Sin nombre',
-    especialidad: document.getElementById('doc-especialidad').value.trim() || '—',
-    nivel:        document.getElementById('doc-nivel').value,
-    telefono:     document.getElementById('doc-telefono').value.trim()     || '—',
+  const payload = {
+    nombre: document.getElementById('doc-nombre').value.trim(),
+    especialidad: document.getElementById('doc-especialidad').value.trim(),
+    nivel: document.getElementById('doc-nivel').value,
+    telefono: document.getElementById('doc-telefono').value.trim(),
   };
 
-  if (editId === -1) {
-    docentes.push(obj);
-  } else {
-    const idx = docentes.findIndex(d => d.id === editId);
-    if (idx > -1) docentes[idx] = obj;
+  const url = editId === -1 ? `${API}/docentes` : `${API}/docentes/${editId}`;
+  const method = editId === -1 ? 'POST' : 'PUT';
+  const { ok, data } = await apiFetch(url, { method, body: JSON.stringify(payload) });
+
+  if (!ok) {
+    mostrarErrorModal('doc', data && data.error ? data.error + ': ' + (data.campos || []).join(', ') : 'No se pudo guardar.');
+    return;
   }
 
   closeModal('doc');
-  renderDoc();
-  document.getElementById('doc-edit-id').value = '-1';
-  document.getElementById('doc-modal-title').textContent = 'Nuevo docente';
-  limpiarCampos(['doc-nombre', 'doc-especialidad', 'doc-telefono']);
+  await cargarDocentes();
+  showToast(editId === -1 ? 'Docente agregado correctamente' : 'Docente actualizado');
 }
 
 function editDoc(id) {
@@ -345,13 +463,15 @@ function editDoc(id) {
   document.getElementById('doc-especialidad').value       = d.especialidad;
   document.getElementById('doc-nivel').value              = d.nivel;
   document.getElementById('doc-telefono').value           = d.telefono;
+  limpiarErrorModal('doc');
   openModal('doc');
 }
 
-function deleteDoc(id) {
+async function deleteDoc(id) {
   if (!confirm('¿Eliminar este docente?')) return;
-  docentes = docentes.filter(d => d.id !== id);
-  renderDoc();
+  const { ok } = await apiFetch(`${API}/docentes/${id}`, { method: 'DELETE' });
+  if (ok) { await cargarDocentes(); showToast('Docente eliminado'); }
+  else showToast('No se pudo eliminar', true);
 }
 
 
@@ -363,45 +483,57 @@ function renderProd() {
   tbody.innerHTML = productos.map(p => `
     <tr>
       <td>${p.nombre}</td>
-      <td>${p.cat}</td>
-      <td>S/ ${p.precio.toFixed(2)}</td>
+      <td>${p.categoria}</td>
+      <td>S/ ${Number(p.precio).toFixed(2)}</td>
       <td>${p.stock}</td>
       <td>
         <div class="acciones">
-          <button class="btn btn-sm" title="Editar" onclick="editProd(${p.id})">
-            <i class="ti ti-edit"></i>
-          </button>
-          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteProd(${p.id})">
-            <i class="ti ti-trash"></i>
-          </button>
+          <button class="btn btn-sm" title="Editar" onclick="editProd(${p.id})"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="deleteProd(${p.id})"><i class="ti ti-trash"></i></button>
         </div>
       </td>
     </tr>`).join('');
   updateDash();
 }
 
-function saveProd() {
+async function cargarProductos() {
+  const { ok, data } = await apiFetch(`${API}/productos`);
+  if (ok) { productos = data; renderProd(); }
+}
+
+async function saveProd() {
+  limpiarErrorModal('prod');
+  const faltantes = validarCampos({
+    'prod-nombre': 'Nombre',
+    'prod-cat': 'Categoría',
+    'prod-precio': 'Precio',
+    'prod-stock': 'Stock'
+  });
+  if (faltantes.length) {
+    mostrarErrorModal('prod', 'Completa estos campos obligatorios: ' + faltantes.join(', '));
+    return;
+  }
+
   const editId = parseInt(document.getElementById('prod-edit-id').value);
-  const obj = {
-    id:     editId === -1 ? nextId.prod++ : editId,
-    nombre: document.getElementById('prod-nombre').value.trim() || 'Sin nombre',
-    cat:    document.getElementById('prod-cat').value,
-    precio: parseFloat(document.getElementById('prod-precio').value) || 0,
-    stock:  parseInt(document.getElementById('prod-stock').value)    || 0,
+  const payload = {
+    nombre: document.getElementById('prod-nombre').value.trim(),
+    categoria: document.getElementById('prod-cat').value,
+    precio: parseFloat(document.getElementById('prod-precio').value),
+    stock: parseInt(document.getElementById('prod-stock').value),
   };
 
-  if (editId === -1) {
-    productos.push(obj);
-  } else {
-    const idx = productos.findIndex(p => p.id === editId);
-    if (idx > -1) productos[idx] = obj;
+  const url = editId === -1 ? `${API}/productos` : `${API}/productos/${editId}`;
+  const method = editId === -1 ? 'POST' : 'PUT';
+  const { ok, data } = await apiFetch(url, { method, body: JSON.stringify(payload) });
+
+  if (!ok) {
+    mostrarErrorModal('prod', data && data.error ? data.error + ': ' + (data.campos || []).join(', ') : 'No se pudo guardar.');
+    return;
   }
 
   closeModal('prod');
-  renderProd();
-  document.getElementById('prod-edit-id').value = '-1';
-  document.getElementById('prod-modal-title').textContent = 'Nuevo producto';
-  limpiarCampos(['prod-nombre', 'prod-precio', 'prod-stock']);
+  await cargarProductos();
+  showToast(editId === -1 ? 'Producto agregado correctamente' : 'Producto actualizado');
 }
 
 function editProd(id) {
@@ -410,23 +542,24 @@ function editProd(id) {
   document.getElementById('prod-edit-id').value           = id;
   document.getElementById('prod-modal-title').textContent  = 'Editar producto';
   document.getElementById('prod-nombre').value             = p.nombre;
-  document.getElementById('prod-cat').value                = p.cat;
+  document.getElementById('prod-cat').value                = p.categoria;
   document.getElementById('prod-precio').value             = p.precio;
   document.getElementById('prod-stock').value              = p.stock;
+  limpiarErrorModal('prod');
   openModal('prod');
 }
 
-function deleteProd(id) {
+async function deleteProd(id) {
   if (!confirm('¿Eliminar este producto?')) return;
-  productos = productos.filter(p => p.id !== id);
-  renderProd();
+  const { ok } = await apiFetch(`${API}/productos/${id}`, { method: 'DELETE' });
+  if (ok) { await cargarProductos(); showToast('Producto eliminado'); }
+  else showToast('No se pudo eliminar', true);
 }
 
 
 /* ============================
-   INICIALIZAR
+   INICIALIZAR — carga todo desde la base de datos real
    ============================ */
-renderMat();
-renderAlu();
-renderDoc();
-renderProd();
+(async function init() {
+  await Promise.all([cargarMatriculas(), cargarAlumnos(), cargarDocentes(), cargarProductos()]);
+})();

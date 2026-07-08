@@ -323,33 +323,40 @@
 
     <div class="matricula-form">
       <p class="form-titulo">📝 Solicitud de matrícula</p>
-      <p class="form-subtitulo">Completa el formulario y te contactamos para coordinar tu visita.</p>
+      <p class="form-subtitulo">Completa el formulario y te contactamos para coordinar tu visita. Los campos con * son obligatorios.</p>
+
+      <div id="matricula-msg" class="form-msg"></div>
 
       <div class="form-grid-2">
         <div class="form-row">
-          <label>Nombre del apoderado</label>
-          <input type="text" placeholder="Nombre completo">
+          <label>Nombre del apoderado *</label>
+          <input type="text" id="mp-apoderado" placeholder="Nombre completo">
+          <span class="error-text" id="mp-apoderado-err"></span>
         </div>
         <div class="form-row">
-          <label>Teléfono / WhatsApp</label>
-          <input type="tel" placeholder="+51 945373930">
+          <label>Teléfono / WhatsApp *</label>
+          <input type="tel" id="mp-telefono" placeholder="+51 945373930">
+          <span class="error-text" id="mp-telefono-err"></span>
         </div>
       </div>
 
       <div class="form-grid-2">
         <div class="form-row">
-          <label>Nombre del alumno</label>
-          <input type="text" placeholder="Nombre del niño/a">
+          <label>Nombre del alumno *</label>
+          <input type="text" id="mp-alumno" placeholder="Nombre del niño/a">
+          <span class="error-text" id="mp-alumno-err"></span>
         </div>
         <div class="form-row">
-          <label>Edad del alumno</label>
-          <input type="number" placeholder="Ej: 5" min="3" max="13">
+          <label>Edad del alumno *</label>
+          <input type="number" id="mp-edad" placeholder="Ej: 5" min="3" max="13">
+          <span class="error-text" id="mp-edad-err"></span>
         </div>
       </div>
 
       <div class="form-row">
-        <label>Nivel al que postula</label>
-        <select>
+        <label>Nivel al que postula *</label>
+        <select id="mp-nivel">
+          <option value="">Selecciona un nivel…</option>
           <option>Inicial – 2 años</option>
           <option>Inicial – 3 años</option>
           <option>Inicial – 4 años</option>
@@ -361,14 +368,15 @@
           <option>Primaria – 5° grado</option>
           <option>Primaria – 6° grado</option>
         </select>
+        <span class="error-text" id="mp-nivel-err"></span>
       </div>
 
       <div class="form-row">
         <label>Comentarios adicionales</label>
-        <textarea placeholder="¿Tienes alguna consulta sobre el proceso de matrícula?"></textarea>
+        <textarea id="mp-comentarios" placeholder="¿Tienes alguna consulta sobre el proceso de matrícula?"></textarea>
       </div>
 
-      <button class="btn-matricula-form">Enviar solicitud de matrícula 🎒</button>
+      <button class="btn-matricula-form" id="mp-submit-btn" onclick="enviarMatricula()">Enviar solicitud de matrícula 🎒</button>
 
       <div class="matricula-requisitos">
         <h4>📋 Documentos requeridos</h4>
@@ -428,30 +436,37 @@
 
     <div class="contacto-form">
       <p class="form-titulo">Envíanos un mensaje</p>
-      <p class="form-subtitulo">Te respondemos en menos de 24 horas hábiles.</p>
+      <p class="form-subtitulo">Te respondemos en menos de 24 horas hábiles. Los campos con * son obligatorios.</p>
+
+      <div id="contacto-msg" class="form-msg"></div>
 
       <div class="form-row">
-        <label>Nombre completo</label>
-        <input type="text" placeholder="Tu nombre">
+        <label>Nombre completo *</label>
+        <input type="text" id="ct-nombre" placeholder="Tu nombre">
+        <span class="error-text" id="ct-nombre-err"></span>
       </div>
       <div class="form-row">
-        <label>Teléfono / WhatsApp</label>
-        <input type="tel" placeholder="+51 945373930">
+        <label>Teléfono / WhatsApp *</label>
+        <input type="tel" id="ct-telefono" placeholder="+51 945373930">
+        <span class="error-text" id="ct-telefono-err"></span>
       </div>
       <div class="form-row">
-        <label>Motivo de consulta</label>
-        <select>
+        <label>Motivo de consulta *</label>
+        <select id="ct-motivo">
+          <option value="">Selecciona un motivo…</option>
           <option>Consulta sobre la tienda escolar</option>
           <option>Información sobre talleres</option>
           <option>Consulta sobre pagos y pensiones</option>
           <option>Otro</option>
         </select>
+        <span class="error-text" id="ct-motivo-err"></span>
       </div>
       <div class="form-row">
-        <label>Mensaje</label>
-        <textarea placeholder="Escribe tu consulta aquí…"></textarea>
+        <label>Mensaje *</label>
+        <textarea id="ct-mensaje" placeholder="Escribe tu consulta aquí…"></textarea>
+        <span class="error-text" id="ct-mensaje-err"></span>
       </div>
-      <button class="btn-form-contacto">Enviar mensaje ✉️</button>
+      <button class="btn-form-contacto" id="ct-submit-btn" onclick="enviarContacto()">Enviar mensaje ✉️</button>
     </div>
   </div>
 </section>

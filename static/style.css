@@ -1,14 +1,14 @@
 :root {
-  --azul:    #4A90C2;  /* antes #1a7fc1 — azul más suave, transmite confianza */
-  --azul-c:  #7FC4E8;  /* antes #4fb3ef — celeste de apoyo */
-  --rojo:    #E8746B;  /* antes #e8322a — coral cálido en vez de rojo duro */
-  --verde:   #5FB88F;  /* antes #3ab54a — verde salvia */
-  --amarillo:#F2BB4E;  /* antes #f5b800 — dorado miel */
-  --morado:  #A67FC4;  /* antes #9b3fbf — lavanda */
-  --naranja: #F0955C;  /* antes #f47920 — durazno */
+  --azul:    #4A90C2;
+  --azul-c:  #7FC4E8;
+  --rojo:    #E8746B;
+  --verde:   #5FB88F;
+  --amarillo:#F2BB4E;
+  --morado:  #A67FC4;
+  --naranja: #F0955C;
   --blanco:  #ffffff;
-  --gris-f:  #FAF8FC;  /* fondo general, tono cálido y neutro */
-  --texto:   #384154;  /* gris azulado, más suave que el negro puro */
+  --gris-f:  #FAF8FC;
+  --texto:   #384154;
 
   --rosa-pastel:     #FBD3E9;
   --celeste-pastel:  #AEE3F7;
@@ -26,7 +26,7 @@ body {
   background: var(--gris-f);
   color: var(--texto);
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased; /* tipografía más nítida */
+  -webkit-font-smoothing: antialiased;
 }
 
 /* NAV */
@@ -74,7 +74,6 @@ nav {
 }
 .nav-links .btn-matricula:hover { background: var(--naranja); }
 
-/* BOTÓN ADMIN EN NAVBAR */
 .nav-links .btn-admin {
   background: var(--texto);
   color: white !important;
@@ -91,7 +90,6 @@ nav {
   transform: translateY(-1px);
 }
 
-/* BOTÓN HAMBURGUESA (solo móvil) */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -119,12 +117,9 @@ nav {
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-/* NAV RESPONSIVE — menú hamburguesa en móvil/tablet */
 @media (max-width: 900px) {
   nav { padding: 0 18px; height: 64px; }
-
   .nav-toggle { display: flex; }
-
   .nav-links {
     position: fixed;
     top: 64px;
@@ -139,9 +134,7 @@ nav {
     box-shadow: 0 10px 24px rgba(0,0,0,.10);
     transition: max-height .3s ease;
   }
-  .nav-links.open {
-    max-height: 480px;
-  }
+  .nav-links.open { max-height: 480px; }
   .nav-links li { width: 100%; }
   .nav-links a {
     display: block;
@@ -656,6 +649,8 @@ section { padding: 80px 20px; }
   margin-top: 8px;
 }
 .btn-matricula-form:hover { opacity:.9; transform:translateY(-2px); }
+.btn-matricula-form:disabled,
+.btn-form-contacto:disabled { opacity:.6; cursor:not-allowed; transform:none; }
 
 .matricula-requisitos {
   background: #FFF6EA;
@@ -816,7 +811,6 @@ footer {
 .footer-col ul li a { color:rgba(255,255,255,.65); text-decoration:none; font-size:13px; font-weight:600; transition:color .2s; }
 .footer-col ul li a:hover { color:var(--azul-c); }
 
-/* ENLACE ADMIN EN FOOTER */
 .footer-col ul li a.footer-admin-link {
   color: var(--azul-c);
   font-weight: 800;
@@ -848,3 +842,34 @@ footer {
     var(--verde) 50%, var(--azul) 67%, var(--azul-c) 83%, var(--morado) 100%
   );
 }
+
+/* ============================================================
+   VALIDACIÓN DE FORMULARIOS (nuevo)
+   ============================================================ */
+.form-row input.input-error,
+.form-row select.input-error,
+.form-row textarea.input-error {
+  border-color: #E8746B !important;
+  background: #FFF5F4;
+}
+
+.error-text {
+  display: block;
+  color: #C0392B;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 5px;
+  min-height: 0;
+}
+
+.form-msg {
+  display: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.form-msg.show { display: block; }
+.form-msg.success { background: #E6F9F0; color: #0D7A4E; border: 2px solid #B8E8CE; }
+.form-msg.error   { background: #FFF0F0; color: #C0392B; border: 2px solid #F5C6C6; }

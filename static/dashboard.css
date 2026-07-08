@@ -1,7 +1,7 @@
 :root {
   --azul:      #4A90C2;
   --azul-osc:  #2E5F84;
-  --rosa-bg:   #FDF1F6;   /* antes #fdeef3 */
+  --rosa-bg:   #FDF1F6;
   --rosa-borde:#F6D9E3;
   --texto:     #384154;
   --gris-suave:#8A93A3;
@@ -276,9 +276,6 @@ tr:hover td {
   background: #FDF3F7;
 }
 
-/* ============================
-   BADGES / ETIQUETAS
-   ============================ */
 .badge {
   display: inline-block;
   padding: 3px 10px;
@@ -302,9 +299,6 @@ tr:hover td {
   color: var(--azul-osc);
 }
 
-/* ============================
-   BOTONES
-   ============================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -371,9 +365,6 @@ tr:hover td {
   color: #333;
 }
 
-/* ============================
-   BARRA DE BÚSQUEDA
-   ============================ */
 .search-bar {
   display: flex;
   align-items: center;
@@ -404,17 +395,11 @@ tr:hover td {
   color: #bbb;
 }
 
-/* ============================
-   ACCIONES EN TABLA
-   ============================ */
 .acciones {
   display: flex;
   gap: 6px;
 }
 
-/* ============================
-   MODALS
-   ============================ */
 .modal-bg {
   display: none;
   position: fixed;
@@ -452,9 +437,6 @@ tr:hover td {
   color: var(--texto);
 }
 
-/* ============================
-   FORMULARIOS
-   ============================ */
 .form-row {
   margin-bottom: 14px;
 }
@@ -506,9 +488,6 @@ tr:hover td {
   border-top: 1px solid var(--rosa-borde);
 }
 
-/* ============================
-   RESPONSIVE (tablet)
-   ============================ */
 @media (max-width: 900px) {
   .metrics {
     grid-template-columns: repeat(2, 1fr);
@@ -558,3 +537,46 @@ tr:hover td {
     padding: 1.25rem;
   }
 }
+
+/* ============================================================
+   VALIDACIÓN DE FORMULARIOS (nuevo)
+   ============================================================ */
+.form-row input.input-error,
+.form-row select.input-error,
+.form-row textarea.input-error {
+  border-color: #E8746B !important;
+  background: #FFF5F4 !important;
+}
+
+.modal-error {
+  display: none;
+  background: #FFF0F0;
+  border: 2px solid #F5C6C6;
+  color: #C0392B;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.modal-error.show { display: block; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0D7A4E;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  z-index: 1200;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: #C0392B; }

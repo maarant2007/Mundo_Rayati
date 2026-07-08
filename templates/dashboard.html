@@ -121,7 +121,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Listado de matrículas</h3>
-          <button class="btn btn-primary" onclick="document.getElementById('mat-edit-id').value=-1; document.getElementById('mat-modal-title').textContent='Nueva matrícula'; limpiarCampos(['mat-alumno','mat-apoderado','mat-telefono']); openModal('mat')">
+          <button class="btn btn-primary" onclick="abrirNuevaMat()">
             <i class="ti ti-plus"></i> Nueva matrícula
           </button>
         </div>
@@ -157,7 +157,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Listado de alumnos</h3>
-          <button class="btn btn-primary" onclick="document.getElementById('alu-edit-id').value=-1; document.getElementById('alu-modal-title').textContent='Nuevo alumno'; limpiarCampos(['alu-nombre','alu-edad','alu-apoderado','alu-telefono']); openModal('alu')">
+          <button class="btn btn-primary" onclick="abrirNuevoAlu()">
             <i class="ti ti-plus"></i> Nuevo alumno
           </button>
         </div>
@@ -193,7 +193,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Listado de docentes</h3>
-          <button class="btn btn-primary" onclick="document.getElementById('doc-edit-id').value=-1; document.getElementById('doc-modal-title').textContent='Nuevo docente'; limpiarCampos(['doc-nombre','doc-especialidad','doc-telefono']); openModal('doc')">
+          <button class="btn btn-primary" onclick="abrirNuevoDoc()">
             <i class="ti ti-plus"></i> Nuevo docente
           </button>
         </div>
@@ -228,7 +228,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Listado de productos</h3>
-          <button class="btn btn-primary" onclick="document.getElementById('prod-edit-id').value=-1; document.getElementById('prod-modal-title').textContent='Nuevo producto'; limpiarCampos(['prod-nombre','prod-precio','prod-stock']); openModal('prod')">
+          <button class="btn btn-primary" onclick="abrirNuevoProd()">
             <i class="ti ti-plus"></i> Nuevo producto
           </button>
         </div>
@@ -264,15 +264,22 @@
       <button class="btn-close" onclick="closeModal('mat')"><i class="ti ti-x"></i></button>
     </div>
 
+    <div class="modal-error" id="mat-form-error"></div>
+
     <input type="hidden" id="mat-edit-id" value="-1">
 
     <div class="form-row">
-      <label>Nombre del alumno</label>
+      <label>Nombre del alumno *</label>
       <input type="text" id="mat-alumno" placeholder="Nombre completo">
     </div>
     <div class="form-row">
-      <label>Nivel</label>
+      <label>Edad *</label>
+      <input type="number" id="mat-edad" min="3" max="13" placeholder="Ej: 6">
+    </div>
+    <div class="form-row">
+      <label>Nivel *</label>
       <select id="mat-nivel">
+        <option value="">Selecciona un nivel…</option>
         <option>Inicial – 2 años</option>
         <option>Inicial – 3 años</option>
         <option>Inicial – 4 años</option>
@@ -286,15 +293,19 @@
       </select>
     </div>
     <div class="form-row">
-      <label>Apoderado</label>
+      <label>Apoderado *</label>
       <input type="text" id="mat-apoderado" placeholder="Nombre del apoderado">
     </div>
     <div class="form-row">
-      <label>Teléfono</label>
+      <label>Teléfono *</label>
       <input type="tel" id="mat-telefono" placeholder="+51 900000000">
     </div>
     <div class="form-row">
-      <label>Estado</label>
+      <label>Comentarios</label>
+      <textarea id="mat-comentarios" placeholder="Opcional"></textarea>
+    </div>
+    <div class="form-row">
+      <label>Estado *</label>
       <select id="mat-estado">
         <option>Pendiente</option>
         <option>En proceso</option>
@@ -317,15 +328,18 @@
       <button class="btn-close" onclick="closeModal('alu')"><i class="ti ti-x"></i></button>
     </div>
 
+    <div class="modal-error" id="alu-form-error"></div>
+
     <input type="hidden" id="alu-edit-id" value="-1">
 
     <div class="form-row">
-      <label>Nombre del alumno</label>
+      <label>Nombre del alumno *</label>
       <input type="text" id="alu-nombre" placeholder="Nombre completo">
     </div>
     <div class="form-row">
-      <label>Grado</label>
+      <label>Grado *</label>
       <select id="alu-grado">
+        <option value="">Selecciona un grado…</option>
         <option>Inicial – 3 años</option>
         <option>Inicial – 4 años</option>
         <option>Inicial – 5 años</option>
@@ -338,15 +352,15 @@
       </select>
     </div>
     <div class="form-row">
-      <label>Edad</label>
+      <label>Edad *</label>
       <input type="number" id="alu-edad" min="3" max="13" placeholder="Ej: 6">
     </div>
     <div class="form-row">
-      <label>Apoderado</label>
+      <label>Apoderado *</label>
       <input type="text" id="alu-apoderado" placeholder="Nombre del apoderado">
     </div>
     <div class="form-row">
-      <label>Teléfono</label>
+      <label>Teléfono *</label>
       <input type="tel" id="alu-telefono" placeholder="+51 900000000">
     </div>
 
@@ -365,25 +379,27 @@
       <button class="btn-close" onclick="closeModal('doc')"><i class="ti ti-x"></i></button>
     </div>
 
+    <div class="modal-error" id="doc-form-error"></div>
+
     <input type="hidden" id="doc-edit-id" value="-1">
 
     <div class="form-row">
-      <label>Nombre del docente</label>
+      <label>Nombre del docente *</label>
       <input type="text" id="doc-nombre" placeholder="Ej: Sra. Lucía Mendoza">
     </div>
     <div class="form-row">
-      <label>Especialidad</label>
+      <label>Especialidad *</label>
       <input type="text" id="doc-especialidad" placeholder="Ej: Comunicación">
     </div>
     <div class="form-row">
-      <label>Nivel</label>
+      <label>Nivel *</label>
       <select id="doc-nivel">
         <option>Inicial</option>
         <option>Primaria</option>
       </select>
     </div>
     <div class="form-row">
-      <label>Teléfono</label>
+      <label>Teléfono *</label>
       <input type="tel" id="doc-telefono" placeholder="+51 900000000">
     </div>
 
@@ -402,14 +418,16 @@
       <button class="btn-close" onclick="closeModal('prod')"><i class="ti ti-x"></i></button>
     </div>
 
+    <div class="modal-error" id="prod-form-error"></div>
+
     <input type="hidden" id="prod-edit-id" value="-1">
 
     <div class="form-row">
-      <label>Nombre del producto</label>
+      <label>Nombre del producto *</label>
       <input type="text" id="prod-nombre" placeholder="Ej: Agenda Escolar">
     </div>
     <div class="form-row">
-      <label>Categoría</label>
+      <label>Categoría *</label>
       <select id="prod-cat">
         <option>Libros</option>
         <option>Uniforme</option>
@@ -418,11 +436,11 @@
       </select>
     </div>
     <div class="form-row">
-      <label>Precio (S/)</label>
+      <label>Precio (S/) *</label>
       <input type="number" id="prod-precio" step="0.10" min="0" placeholder="Ej: 25.00">
     </div>
     <div class="form-row">
-      <label>Stock</label>
+      <label>Stock *</label>
       <input type="number" id="prod-stock" min="0" placeholder="Ej: 30">
     </div>
 

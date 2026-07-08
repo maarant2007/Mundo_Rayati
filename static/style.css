@@ -1,14 +1,14 @@
 :root {
-  --azul:    #4A90C2;
-  --azul-c:  #7FC4E8;
-  --rojo:    #E8746B;
-  --verde:   #5FB88F;
-  --amarillo:#F2BB4E;
-  --morado:  #A67FC4;
-  --naranja: #F0955C;
+  --azul:    #4A90C2;  /* antes #1a7fc1 — azul más suave, transmite confianza */
+  --azul-c:  #7FC4E8;  /* antes #4fb3ef — celeste de apoyo */
+  --rojo:    #E8746B;  /* antes #e8322a — coral cálido en vez de rojo duro */
+  --verde:   #5FB88F;  /* antes #3ab54a — verde salvia */
+  --amarillo:#F2BB4E;  /* antes #f5b800 — dorado miel */
+  --morado:  #A67FC4;  /* antes #9b3fbf — lavanda */
+  --naranja: #F0955C;  /* antes #f47920 — durazno */
   --blanco:  #ffffff;
-  --gris-f:  #FAF8FC;
-  --texto:   #384154;
+  --gris-f:  #FAF8FC;  /* fondo general, tono cálido y neutro */
+  --texto:   #384154;  /* gris azulado, más suave que el negro puro */
 
   --rosa-pastel:     #FBD3E9;
   --celeste-pastel:  #AEE3F7;
@@ -26,7 +26,7 @@ body {
   background: var(--gris-f);
   color: var(--texto);
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased; /* tipografía más nítida */
 }
 
 /* NAV */
@@ -74,6 +74,7 @@ nav {
 }
 .nav-links .btn-matricula:hover { background: var(--naranja); }
 
+/* BOTÓN ADMIN EN NAVBAR */
 .nav-links .btn-admin {
   background: var(--texto);
   color: white !important;
@@ -90,6 +91,7 @@ nav {
   transform: translateY(-1px);
 }
 
+/* BOTÓN HAMBURGUESA (solo móvil) */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -117,9 +119,12 @@ nav {
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
+/* NAV RESPONSIVE — menú hamburguesa en móvil/tablet */
 @media (max-width: 900px) {
   nav { padding: 0 18px; height: 64px; }
+
   .nav-toggle { display: flex; }
+
   .nav-links {
     position: fixed;
     top: 64px;
@@ -134,7 +139,9 @@ nav {
     box-shadow: 0 10px 24px rgba(0,0,0,.10);
     transition: max-height .3s ease;
   }
-  .nav-links.open { max-height: 480px; }
+  .nav-links.open {
+    max-height: 480px;
+  }
   .nav-links li { width: 100%; }
   .nav-links a {
     display: block;
@@ -465,6 +472,13 @@ section { padding: 80px 20px; }
 .producto-card.visible { display: flex; flex-direction: column; }
 .producto-card:hover { transform:translateY(-5px); box-shadow:0 12px 32px rgba(0,0,0,.12); }
 
+.prod-emoji {
+  font-size: 56px;
+  text-align: center;
+  padding: 28px 20px 14px;
+  background: white;
+  line-height: 1;
+}
 .prod-thumb {
   width: 100%;
   height: 150px;
@@ -816,6 +830,7 @@ footer {
 .footer-col ul li a { color:rgba(255,255,255,.65); text-decoration:none; font-size:13px; font-weight:600; transition:color .2s; }
 .footer-col ul li a:hover { color:var(--azul-c); }
 
+/* ENLACE ADMIN EN FOOTER */
 .footer-col ul li a.footer-admin-link {
   color: var(--azul-c);
   font-weight: 800;

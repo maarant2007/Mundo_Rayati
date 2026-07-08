@@ -138,7 +138,19 @@
   </div>
 </section>
 
-<div class="productos-grid">
+<section id="tienda">
+  <p class="section-label">Tienda Escolar</p>
+  <h2 class="section-title">📦 Libros, Uniformes y Útiles</h2>
+  <p class="section-sub">Encuentra todo lo que tu hijo necesita para el año escolar, con precios accesibles y calidad garantizada.</p>
+
+  <div class="tienda-tabs">
+    <button class="tab-btn active" onclick="filtrar(this,'todos')">🛒 Todo</button>
+    <button class="tab-btn" onclick="filtrar(this,'libros')">📚 Libros</button>
+    <button class="tab-btn" onclick="filtrar(this,'uniforme')">👕 Uniformes</button>
+    <button class="tab-btn" onclick="filtrar(this,'agendas')">📓 Agenda</button>
+  </div>
+
+  <div class="productos-grid">
     <div class="producto-card visible" data-cat="libros">
       <div class="prod-thumb"><img src="{{ url_for('static', filename='img/comunicacion_iniciaal.jpeg') }}" alt="Comunicación Nivel Inicial"></div>
       <div class="prod-body">
@@ -269,6 +281,12 @@
       </div>
     </div>
   </div>
+
+  <p class="tienda-nota">
+    💬 Para realizar tu pedido, escríbenos por <strong>WhatsApp o al formulario de contacto</strong>.<br>
+    Entrega en institución o coordina el recojo. Precios válidos para la campaña escolar 2025.
+  </p>
+</section>
 
 <section id="matricula">
   <p class="section-label">Inscripciones 2026</p>
@@ -486,12 +504,12 @@
     <div class="footer-col">
       <h4>Administración</h4>
       <ul>
-        <li><a href="/dashboard" class="footer-admin-link"> Panel Admin</a></li>
+        <li><a href="/dashboard" class="footer-admin-link">Panel Admin</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    © 2026 I.E.P. Mundo de Rayati
+    © 2026 I.E.P. Mundo de Rayati · Todos los derechos reservados
   </div>
 </footer>
 

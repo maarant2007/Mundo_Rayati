@@ -17,7 +17,7 @@ init_db()
 # Usuario y contraseña del panel admin. Se pueden sobreescribir con
 # variables de entorno ADMIN_USER / ADMIN_PASS al desplegar.
 ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
-ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "rayati2026"))
+ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "mundoderayati"))
 
 
 def login_required(f):

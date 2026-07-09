@@ -1,11 +1,54 @@
+import os
 import re
-from flask import Flask, render_template, request, jsonify
+from functools import wraps
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 from db import get_connection, init_db
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "cambia-esta-clave-en-produccion-2026")
 
 # Crea las tablas (si no existen) apenas arranca la aplicación
 init_db()
+
+# ============================================================
+#  AUTENTICACIÓN DEL PANEL ADMINISTRATIVO
+# ============================================================
+# Usuario y contraseña del panel admin. Se pueden sobreescribir con
+# variables de entorno ADMIN_USER / ADMIN_PASS al desplegar.
+ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
+ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "rayati2026"))
+
+
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not session.get("logged_in"):
+            if request.path.startswith("/api/"):
+                return jsonify({"error": "No autorizado, inicia sesión"}), 401
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    error = None
+    if request.method == "POST":
+        usuario = request.form.get("usuario", "").strip()
+        clave = request.form.get("clave", "")
+        if usuario == ADMIN_USER and check_password_hash(ADMIN_PASS_HASH, clave):
+            session["logged_in"] = True
+            session["usuario"] = usuario
+            return redirect(url_for("dashboard"))
+        error = "Usuario o contraseña incorrectos."
+    return render_template("login.html", error=error)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 
 # ============================================================
@@ -75,6 +118,7 @@ def inicio():
 
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
     return render_template("dashboard.html")
 
@@ -83,6 +127,7 @@ def dashboard():
 #  API: MATRÍCULAS (usado por el dashboard admin)
 # ============================================================
 @app.route("/api/matriculas", methods=["GET"])
+@login_required
 def get_matriculas():
     conn = get_connection()
     filas = conn.execute("SELECT * FROM matriculas ORDER BY id DESC").fetchall()
@@ -91,6 +136,7 @@ def get_matriculas():
 
 
 @app.route("/api/matriculas", methods=["POST"])
+@login_required
 def crear_matricula():
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["alumno", "nivel", "apoderado", "telefono", "estado"])
@@ -113,6 +159,7 @@ def crear_matricula():
 
 
 @app.route("/api/matriculas/<int:id>", methods=["PUT"])
+@login_required
 def editar_matricula(id):
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["alumno", "nivel", "apoderado", "telefono", "estado"])
@@ -134,6 +181,7 @@ def editar_matricula(id):
 
 
 @app.route("/api/matriculas/<int:id>", methods=["DELETE"])
+@login_required
 def borrar_matricula(id):
     conn = get_connection()
     conn.execute("DELETE FROM matriculas WHERE id=?", (id,))
@@ -170,6 +218,7 @@ def matricula_publica():
 #  API: ALUMNOS
 # ============================================================
 @app.route("/api/alumnos", methods=["GET"])
+@login_required
 def get_alumnos():
     conn = get_connection()
     filas = conn.execute("SELECT * FROM alumnos ORDER BY id DESC").fetchall()
@@ -178,6 +227,7 @@ def get_alumnos():
 
 
 @app.route("/api/alumnos", methods=["POST"])
+@login_required
 def crear_alumno():
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["nombre", "grado", "edad", "apoderado", "telefono"])
@@ -199,6 +249,7 @@ def crear_alumno():
 
 
 @app.route("/api/alumnos/<int:id>", methods=["PUT"])
+@login_required
 def editar_alumno(id):
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["nombre", "grado", "edad", "apoderado", "telefono"])
@@ -219,6 +270,7 @@ def editar_alumno(id):
 
 
 @app.route("/api/alumnos/<int:id>", methods=["DELETE"])
+@login_required
 def borrar_alumno(id):
     conn = get_connection()
     conn.execute("DELETE FROM alumnos WHERE id=?", (id,))
@@ -231,6 +283,7 @@ def borrar_alumno(id):
 #  API: DOCENTES
 # ============================================================
 @app.route("/api/docentes", methods=["GET"])
+@login_required
 def get_docentes():
     conn = get_connection()
     filas = conn.execute("SELECT * FROM docentes ORDER BY id DESC").fetchall()
@@ -239,6 +292,7 @@ def get_docentes():
 
 
 @app.route("/api/docentes", methods=["POST"])
+@login_required
 def crear_docente():
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["nombre", "especialidad", "nivel", "telefono"])
@@ -260,6 +314,7 @@ def crear_docente():
 
 
 @app.route("/api/docentes/<int:id>", methods=["PUT"])
+@login_required
 def editar_docente(id):
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["nombre", "especialidad", "nivel", "telefono"])
@@ -280,6 +335,7 @@ def editar_docente(id):
 
 
 @app.route("/api/docentes/<int:id>", methods=["DELETE"])
+@login_required
 def borrar_docente(id):
     conn = get_connection()
     conn.execute("DELETE FROM docentes WHERE id=?", (id,))
@@ -292,6 +348,7 @@ def borrar_docente(id):
 #  API: PRODUCTOS (tienda escolar)
 # ============================================================
 @app.route("/api/productos", methods=["GET"])
+@login_required
 def get_productos():
     conn = get_connection()
     filas = conn.execute("SELECT * FROM productos ORDER BY id DESC").fetchall()
@@ -300,6 +357,7 @@ def get_productos():
 
 
 @app.route("/api/productos", methods=["POST"])
+@login_required
 def crear_producto():
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["nombre", "categoria", "precio", "stock"])
@@ -318,6 +376,7 @@ def crear_producto():
 
 
 @app.route("/api/productos/<int:id>", methods=["PUT"])
+@login_required
 def editar_producto(id):
     data = request.get_json(force=True, silent=True) or {}
     faltantes = validar_campos(data, ["nombre", "categoria", "precio", "stock"])
@@ -335,6 +394,7 @@ def editar_producto(id):
 
 
 @app.route("/api/productos/<int:id>", methods=["DELETE"])
+@login_required
 def borrar_producto(id):
     conn = get_connection()
     conn.execute("DELETE FROM productos WHERE id=?", (id,))

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar sesión · Mundo de Rayati</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul: #4A90C2;
+    --azul-osc: #2E5F84;
+    --rosa-bg: #FDF1F6;
+    --rosa-borde: #F6D9E3;
+    --texto: #384154;
+    --rojo: #E8746B;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #AEE3F7 0%, #FFEDA8 35%, #FBD3E9 70%, #E4CCFA 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-card {
+    background: white;
+    border-radius: 24px;
+    padding: 44px 40px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    border-top: 6px solid var(--azul);
+  }
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .login-logo img {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  .login-logo span {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 19px;
+    color: var(--azul-osc);
+  }
+  .login-card h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--texto);
+    margin: 18px 0 6px;
+  }
+  .login-card p.sub {
+    font-size: 13px;
+    color: #8a9aaa;
+    font-weight: 600;
+    margin-bottom: 26px;
+  }
+  .form-row { margin-bottom: 16px; }
+  .form-row label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .form-row input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 2px solid var(--rosa-borde);
+    background: #FDF6F9;
+    font-size: 15px;
+    font-family: 'Nunito', sans-serif;
+    color: var(--texto);
+    outline: none;
+    transition: border-color .2s, background .2s;
+  }
+  .form-row input:focus { border-color: var(--azul); background: white; }
+  .btn-login {
+    width: 100%;
+    background: linear-gradient(135deg, var(--azul), #7FC4E8);
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: opacity .2s, transform .2s;
+  }
+  .btn-login:hover { opacity: .9; transform: translateY(-1px); }
+  .error-box {
+    background: #FFF0F0;
+    border: 2px solid #F5C6C6;
+    color: #C0392B;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .volver {
+    display: block;
+    text-align: center;
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #8a9aaa;
+    text-decoration: none;
+  }
+  .volver:hover { color: var(--azul); }
+</style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="Mundo de Rayati">
+      <span>Mundo de Rayati</span>
+    </div>
+    <h1>Panel administrativo</h1>
+    <p class="sub">Ingresa tus credenciales para continuar</p>
+
+    {% if error %}
+      <div class="error-box">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-row">
+        <label>Usuario</label>
+        <input type="text" name="usuario" placeholder="admin" required autofocus>
+      </div>
+      <div class="form-row">
+        <label>Contraseña</label>
+        <input type="password" name="clave" placeholder="mundoderayati" required>
+      </div>
+      <button type="submit" class="btn-login">Iniciar sesión</button>
+    </form>
+
+    <a href="/" class="volver">← Volver al sitio</a>
+  </div>
+
+</body>
+</html>

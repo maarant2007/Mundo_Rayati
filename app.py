@@ -1,3 +1,4 @@
+import re
 from flask import Flask, render_template, request, jsonify
 from db import get_connection, init_db
 
@@ -8,7 +9,7 @@ init_db()
 
 
 # ============================================================
-#  UTILIDAD DE VALIDACIÓN
+#  UTILIDADES DE VALIDACIÓN
 # ============================================================
 def validar_campos(data, campos_obligatorios):
     """
@@ -21,6 +22,48 @@ def validar_campos(data, campos_obligatorios):
         if valor is None or (isinstance(valor, str) and valor.strip() == ""):
             faltantes.append(campo)
     return faltantes
+
+
+# Solo letras (con tildes/ñ), espacios, apóstrofes y guiones. 2 a 60 caracteres.
+NOMBRE_RE = re.compile(r"^[A-Za-zÁÉÍÓÚÀÈÌÒÙÑÜáéíóúàèìòùñü'.\s-]{2,60}$")
+
+
+def nombre_valido(valor):
+    return bool(valor) and bool(NOMBRE_RE.match(valor.strip()))
+
+
+def telefono_valido(valor):
+    """Acepta '+51 945373930', '945373930', '51945373930', etc.
+    Debe quedar en exactamente 9 dígitos y empezar en 9 (celular Perú)."""
+    if not valor:
+        return False
+    digitos = re.sub(r"\D", "", valor)
+    if digitos.startswith("51") and len(digitos) == 11:
+        digitos = digitos[2:]
+    return bool(re.fullmatch(r"9\d{8}", digitos))
+
+
+def validar_formato(data, reglas):
+    """
+    reglas: dict { campo: 'nombre' | 'telefono' }
+    Devuelve lista de mensajes de error de formato (solo para campos que
+    vienen no vacíos; los vacíos ya los atrapa validar_campos).
+    """
+    errores = []
+    etiquetas = {
+        "alumno": "Nombre del alumno", "apoderado": "Apoderado", "nombre": "Nombre",
+        "especialidad": "Especialidad", "telefono": "Teléfono",
+    }
+    for campo, tipo in reglas.items():
+        valor = data.get(campo)
+        if valor is None or (isinstance(valor, str) and valor.strip() == ""):
+            continue  # ya reportado como campo faltante si era obligatorio
+        etiqueta = etiquetas.get(campo, campo)
+        if tipo == "nombre" and not nombre_valido(str(valor)):
+            errores.append(f"{etiqueta}: solo se permiten letras y espacios")
+        elif tipo == "telefono" and not telefono_valido(str(valor)):
+            errores.append(f"{etiqueta}: debe ser un número válido de 9 dígitos (ej: 945373930)")
+    return errores
 
 
 # ============================================================
@@ -53,6 +96,9 @@ def crear_matricula():
     faltantes = validar_campos(data, ["alumno", "nivel", "apoderado", "telefono", "estado"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"alumno": "nombre", "apoderado": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     cur = conn.execute(
@@ -72,6 +118,9 @@ def editar_matricula(id):
     faltantes = validar_campos(data, ["alumno", "nivel", "apoderado", "telefono", "estado"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"alumno": "nombre", "apoderado": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     conn.execute(
@@ -102,6 +151,9 @@ def matricula_publica():
     faltantes = validar_campos(data, ["alumno", "edad", "nivel", "apoderado", "telefono"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"alumno": "nombre", "apoderado": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     conn.execute(
@@ -131,6 +183,9 @@ def crear_alumno():
     faltantes = validar_campos(data, ["nombre", "grado", "edad", "apoderado", "telefono"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"nombre": "nombre", "apoderado": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     cur = conn.execute(
@@ -149,6 +204,9 @@ def editar_alumno(id):
     faltantes = validar_campos(data, ["nombre", "grado", "edad", "apoderado", "telefono"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"nombre": "nombre", "apoderado": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     conn.execute(
@@ -186,6 +244,9 @@ def crear_docente():
     faltantes = validar_campos(data, ["nombre", "especialidad", "nivel", "telefono"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"nombre": "nombre", "especialidad": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     cur = conn.execute(
@@ -204,6 +265,9 @@ def editar_docente(id):
     faltantes = validar_campos(data, ["nombre", "especialidad", "nivel", "telefono"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"nombre": "nombre", "especialidad": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     conn.execute(
@@ -288,6 +352,9 @@ def crear_contacto():
     faltantes = validar_campos(data, ["nombre", "telefono", "motivo", "mensaje"])
     if faltantes:
         return jsonify({"error": "Faltan campos obligatorios", "campos": faltantes}), 400
+    errores_formato = validar_formato(data, {"nombre": "nombre", "telefono": "telefono"})
+    if errores_formato:
+        return jsonify({"error": "Formato inválido", "campos": errores_formato}), 400
 
     conn = get_connection()
     conn.execute(

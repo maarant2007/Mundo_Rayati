@@ -42,20 +42,47 @@ function showToast(mensaje, esError = false) {
   toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
 }
 
-/* Valida un conjunto de campos { idCampo: 'Etiqueta visible' }.
-   Marca en rojo los vacíos y devuelve la lista de etiquetas faltantes. */
+// Solo letras (con tildes/ñ), espacios, apóstrofes y guiones.
+const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚÀÈÌÒÙÑÜáéíóúàèìòùñü'.\s-]{2,60}$/;
+
+function nombreValido(valor) {
+  return NOMBRE_REGEX.test((valor || '').trim());
+}
+
+function telefonoValido(valor) {
+  let digitos = (valor || '').replace(/\D/g, '');
+  if (digitos.startsWith('51') && digitos.length === 11) digitos = digitos.slice(2);
+  return /^9\d{8}$/.test(digitos);
+}
+
+/* Valida un conjunto de campos.
+   Formato: { idCampo: { label: 'Etiqueta', tipo: 'texto'|'nombre'|'telefono' } }
+   (también acepta el formato viejo { idCampo: 'Etiqueta' } como tipo 'texto')
+   Marca en rojo los inválidos/vacíos y devuelve la lista de etiquetas con problema. */
 function validarCampos(mapaCampos) {
   const faltantes = [];
-  Object.entries(mapaCampos).forEach(([id, etiqueta]) => {
+  Object.entries(mapaCampos).forEach(([id, config]) => {
+    const cfg = typeof config === 'string' ? { label: config, tipo: 'texto' } : config;
     const el = document.getElementById(id);
     if (!el) return;
     const valor = (el.value || '').toString().trim();
+
     if (valor === '') {
       el.classList.add('input-error');
-      faltantes.push(etiqueta);
-    } else {
-      el.classList.remove('input-error');
+      faltantes.push(cfg.label);
+      return;
     }
+    if (cfg.tipo === 'nombre' && !nombreValido(valor)) {
+      el.classList.add('input-error');
+      faltantes.push(cfg.label + ' (solo letras y espacios)');
+      return;
+    }
+    if (cfg.tipo === 'telefono' && !telefonoValido(valor)) {
+      el.classList.add('input-error');
+      faltantes.push(cfg.label + ' (debe tener 9 dígitos, ej: 945373930)');
+      return;
+    }
+    el.classList.remove('input-error');
   });
   return faltantes;
 }
@@ -246,12 +273,12 @@ async function cargarMatriculas() {
 async function saveMat() {
   limpiarErrorModal('mat');
   const faltantes = validarCampos({
-    'mat-alumno': 'Nombre del alumno',
-    'mat-edad': 'Edad',
-    'mat-nivel': 'Nivel',
-    'mat-apoderado': 'Apoderado',
-    'mat-telefono': 'Teléfono',
-    'mat-estado': 'Estado'
+    'mat-alumno': { label: 'Nombre del alumno', tipo: 'nombre' },
+    'mat-edad': { label: 'Edad', tipo: 'texto' },
+    'mat-nivel': { label: 'Nivel', tipo: 'texto' },
+    'mat-apoderado': { label: 'Apoderado', tipo: 'nombre' },
+    'mat-telefono': { label: 'Teléfono', tipo: 'telefono' },
+    'mat-estado': { label: 'Estado', tipo: 'texto' }
   });
   if (faltantes.length) {
     mostrarErrorModal('mat', 'Completa estos campos obligatorios: ' + faltantes.join(', '));
@@ -337,11 +364,11 @@ async function cargarAlumnos() {
 async function saveAlu() {
   limpiarErrorModal('alu');
   const faltantes = validarCampos({
-    'alu-nombre': 'Nombre',
-    'alu-grado': 'Grado',
-    'alu-edad': 'Edad',
-    'alu-apoderado': 'Apoderado',
-    'alu-telefono': 'Teléfono'
+    'alu-nombre': { label: 'Nombre', tipo: 'nombre' },
+    'alu-grado': { label: 'Grado', tipo: 'texto' },
+    'alu-edad': { label: 'Edad', tipo: 'texto' },
+    'alu-apoderado': { label: 'Apoderado', tipo: 'nombre' },
+    'alu-telefono': { label: 'Teléfono', tipo: 'telefono' }
   });
   if (faltantes.length) {
     mostrarErrorModal('alu', 'Completa estos campos obligatorios: ' + faltantes.join(', '));
@@ -422,10 +449,10 @@ async function cargarDocentes() {
 async function saveDoc() {
   limpiarErrorModal('doc');
   const faltantes = validarCampos({
-    'doc-nombre': 'Nombre',
-    'doc-especialidad': 'Especialidad',
-    'doc-nivel': 'Nivel',
-    'doc-telefono': 'Teléfono'
+    'doc-nombre': { label: 'Nombre', tipo: 'nombre' },
+    'doc-especialidad': { label: 'Especialidad', tipo: 'nombre' },
+    'doc-nivel': { label: 'Nivel', tipo: 'texto' },
+    'doc-telefono': { label: 'Teléfono', tipo: 'telefono' }
   });
   if (faltantes.length) {
     mostrarErrorModal('doc', 'Completa estos campos obligatorios: ' + faltantes.join(', '));

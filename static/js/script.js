@@ -34,21 +34,54 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================================
    VALIDACIÓN GENÉRICA DE FORMULARIOS
    ============================================================ */
+
+// Solo letras (con tildes/ñ), espacios, apóstrofes y guiones.
+const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚÀÈÌÒÙÑÜáéíóúàèìòùñü'.\s-]{2,60}$/;
+
+function nombreValido(valor) {
+  return NOMBRE_REGEX.test((valor || '').trim());
+}
+
+function telefonoValido(valor) {
+  let digitos = (valor || '').replace(/\D/g, '');
+  if (digitos.startsWith('51') && digitos.length === 11) digitos = digitos.slice(2);
+  return /^9\d{8}$/.test(digitos);
+}
+
+/* mapaCampos: { id: { label: 'Texto', tipo: 'texto' | 'nombre' | 'telefono' } }
+   También acepta el formato viejo { id: 'Texto' } (se trata como tipo 'texto'). */
 function validarCampos(mapaCampos) {
   const faltantes = [];
-  Object.entries(mapaCampos).forEach(([id, etiqueta]) => {
+  Object.entries(mapaCampos).forEach(([id, config]) => {
+    const cfg = typeof config === 'string' ? { label: config, tipo: 'texto' } : config;
     const el = document.getElementById(id);
     const errEl = document.getElementById(id + '-err');
     if (!el) return;
     const valor = (el.value || '').toString().trim();
+
     if (valor === '') {
       el.classList.add('input-error');
       if (errEl) errEl.textContent = 'Este campo es obligatorio';
-      faltantes.push(etiqueta);
-    } else {
-      el.classList.remove('input-error');
-      if (errEl) errEl.textContent = '';
+      faltantes.push(cfg.label);
+      return;
     }
+
+    if (cfg.tipo === 'nombre' && !nombreValido(valor)) {
+      el.classList.add('input-error');
+      if (errEl) errEl.textContent = 'Solo se permiten letras y espacios';
+      faltantes.push(cfg.label + ' (formato inválido)');
+      return;
+    }
+
+    if (cfg.tipo === 'telefono' && !telefonoValido(valor)) {
+      el.classList.add('input-error');
+      if (errEl) errEl.textContent = 'Debe ser un teléfono válido de 9 dígitos (ej: 945373930)';
+      faltantes.push(cfg.label + ' (formato inválido)');
+      return;
+    }
+
+    el.classList.remove('input-error');
+    if (errEl) errEl.textContent = '';
   });
   return faltantes;
 }
@@ -74,11 +107,11 @@ async function enviarMatricula() {
   ocultarMensajeForm('matricula-msg');
 
   const faltantes = validarCampos({
-    'mp-apoderado': 'Nombre del apoderado',
-    'mp-telefono': 'Teléfono',
-    'mp-alumno': 'Nombre del alumno',
-    'mp-edad': 'Edad del alumno',
-    'mp-nivel': 'Nivel al que postula'
+    'mp-apoderado': { label: 'Nombre del apoderado', tipo: 'nombre' },
+    'mp-telefono': { label: 'Teléfono', tipo: 'telefono' },
+    'mp-alumno': { label: 'Nombre del alumno', tipo: 'nombre' },
+    'mp-edad': { label: 'Edad del alumno', tipo: 'texto' },
+    'mp-nivel': { label: 'Nivel al que postula', tipo: 'texto' }
   });
 
   if (faltantes.length) {
@@ -138,10 +171,10 @@ async function enviarContacto() {
   ocultarMensajeForm('contacto-msg');
 
   const faltantes = validarCampos({
-    'ct-nombre': 'Nombre completo',
-    'ct-telefono': 'Teléfono',
-    'ct-motivo': 'Motivo de consulta',
-    'ct-mensaje': 'Mensaje'
+    'ct-nombre': { label: 'Nombre completo', tipo: 'nombre' },
+    'ct-telefono': { label: 'Teléfono', tipo: 'telefono' },
+    'ct-motivo': { label: 'Motivo de consulta', tipo: 'texto' },
+    'ct-mensaje': { label: 'Mensaje', tipo: 'texto' }
   });
 
   if (faltantes.length) {
